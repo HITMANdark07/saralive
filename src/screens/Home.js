@@ -30,38 +30,73 @@ const Home = ({navigation, currentUser}) => {
             />
             }
             >
-            <View style={{flexDirection:'row', flexWrap:'wrap', justifyContent:'center', alignItems:'center', marginBottom:100}}>
-                <TouchableOpacity activeOpacity={0.5}>
+            <View style={{flexDirection:'row', justifyContent:'center', marginBottom:100}}>
+                <View style={{flexDirection:'column', justifyContent:'flex-start'}}>
+                <TouchableOpacity activeOpacity={0.5} onPress={() => { navigation.navigate('Performer')}}>
+                    <PerformerCard h={true} />
+                </TouchableOpacity>
+
+                <TouchableOpacity activeOpacity={0.5} onPress={() => { navigation.navigate('Performer')}}>
                     <PerformerCard />
                 </TouchableOpacity>
 
-                <TouchableOpacity activeOpacity={0.5}>
+                <TouchableOpacity activeOpacity={0.5} onPress={() => { navigation.navigate('Performer')}}>
                     <PerformerCard />
                 </TouchableOpacity>
 
-                <TouchableOpacity activeOpacity={0.5}>
+                <TouchableOpacity activeOpacity={0.5} onPress={() => { navigation.navigate('Performer')}}>
                     <PerformerCard />
                 </TouchableOpacity>
 
-                <TouchableOpacity activeOpacity={0.5}>
+                <TouchableOpacity activeOpacity={0.5} onPress={() => { navigation.navigate('Performer')}}>
                     <PerformerCard />
                 </TouchableOpacity>
 
-                <TouchableOpacity activeOpacity={0.5}>
+                <TouchableOpacity activeOpacity={0.5} onPress={() => { navigation.navigate('Performer')}}>
                     <PerformerCard />
                 </TouchableOpacity>
 
-                <TouchableOpacity activeOpacity={0.5}>
+                <TouchableOpacity activeOpacity={0.5} onPress={() => { navigation.navigate('Performer')}}>
                     <PerformerCard />
                 </TouchableOpacity>
 
-                <TouchableOpacity activeOpacity={0.5}>
+                <TouchableOpacity activeOpacity={0.5} onPress={() => { navigation.navigate('Performer')}}>
+                    <PerformerCard />
+                </TouchableOpacity>
+                </View>
+                <View style={{flexDirection:'column'}}>
+                <TouchableOpacity activeOpacity={0.5} onPress={() => { navigation.navigate('Performer')}}>
                     <PerformerCard />
                 </TouchableOpacity>
 
-                <TouchableOpacity activeOpacity={0.5}>
+                <TouchableOpacity activeOpacity={0.5} onPress={() => { navigation.navigate('Performer')}}>
                     <PerformerCard />
                 </TouchableOpacity>
+
+                <TouchableOpacity activeOpacity={0.5} onPress={() => { navigation.navigate('Performer')}}>
+                    <PerformerCard />
+                </TouchableOpacity>
+
+                <TouchableOpacity activeOpacity={0.5} onPress={() => { navigation.navigate('Performer')}}>
+                    <PerformerCard />
+                </TouchableOpacity>
+
+                <TouchableOpacity activeOpacity={0.5} onPress={() => { navigation.navigate('Performer')}}>
+                    <PerformerCard />
+                </TouchableOpacity>
+
+                <TouchableOpacity activeOpacity={0.5} onPress={() => { navigation.navigate('Performer')}}>
+                    <PerformerCard />
+                </TouchableOpacity>
+
+                <TouchableOpacity activeOpacity={0.5} onPress={() => { navigation.navigate('Performer')}}>
+                    <PerformerCard />
+                </TouchableOpacity>
+
+                <TouchableOpacity activeOpacity={0.5} onPress={() => { navigation.navigate('Performer')}}>
+                    <PerformerCard />
+                </TouchableOpacity>
+                </View>
             </View>
             </ScrollView>
             <Footer navigation={navigation} name="discover" />

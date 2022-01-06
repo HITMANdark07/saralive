@@ -15,6 +15,7 @@ import Cam from './src/screens/Cam';
 import InboxScreen from './src/screens/InboxScreen';
 import ChatScreen from './src/screens/ChatScreen';
 import Profile from './src/screens/Profile';
+import Performer from './src/screens/Performer';
 import {LogBox } from 'react-native';
 LogBox.ignoreLogs(['Reanimated 2']);
 import { connect } from 'react-redux';
@@ -32,11 +33,12 @@ const Drawer = createDrawerNavigator();
 function HomeDrawer() {
   return (
     <Drawer.Navigator screenOptions={{drawerStyle:{backgroundColor:'transparent'}}} drawerContent={(props) => <CustomDrawer {...props}  /> }>
-        <Drawer.Screen name="Home" component={Home} options={{headerShown:false}} />
-        <Drawer.Screen name="OnCam" component={Cam} options={{headerShown:false}} />
-        <Drawer.Screen name="Messages" component={InboxScreen} options={{headerShown:false}} />
-        <Drawer.Screen name="Me" component={Profile} options={{headerShown:false}} />
-        <Drawer.Screen name="Chat" component={ChatScreen} options={{headerShown:false}} />
+        <Drawer.Screen name="Home" component={Home} options={{headerShown:false, unmountOnBlur:true}} />
+        <Drawer.Screen name="OnCam" component={Cam} options={{headerShown:false, unmountOnBlur:true}} />
+        <Drawer.Screen name="Messages" component={InboxScreen} options={{headerShown:false, unmountOnBlur:true}} />
+        <Drawer.Screen name="Me" component={Profile} options={{headerShown:false, unmountOnBlur:true}} />
+        <Drawer.Screen name="Chat" component={ChatScreen} options={{headerShown:false, unmountOnBlur:true}} />
+        <Drawer.Screen name="Performer" component={Performer} options={{headerShown:false, unmountOnBlur:true}} />
     </Drawer.Navigator>
   );
 }
