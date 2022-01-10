@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "291449817191",
+    "project_id": "saralive-5f3e4",
+    "storage_bucket": "saralive-5f3e4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:291449817191:android:7b6680e58422dd0dfb2cc2",
+        "android_client_info": {
+          "package_name": "com.saralive"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "291449817191-4jsa2ktu32kf0josbovg37ct7tuenr5u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUhVE-e278l8vgSX5OU3XSKLqX6Jj1PQA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "291449817191-4jsa2ktu32kf0josbovg37ct7tuenr5u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
