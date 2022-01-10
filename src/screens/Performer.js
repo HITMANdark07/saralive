@@ -4,9 +4,35 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Ico from 'react-native-vector-icons/Octicons';
 import Ic from 'react-native-vector-icons/FontAwesome5';
 import Icons from 'react-native-vector-icons/Entypo';
+import { getDatabase, push, ref, set, orderByChild, equalTo,onChildAdded, query, orderByValue } from "firebase/database";
+import { connect } from 'react-redux';
 
 const dark= '#10152F';
-const Performer = ({navigation}) => {
+const Performer = ({navigation,currentUser}) => {
+    function writeUserData(userId, name, email) {
+        const db = getDatabase();
+        const messagesRef = ref(db, 'messages');
+        const newMessage = push(messagesRef);
+        set(newMessage,{
+            channelId:"1221",
+            from:userId,
+            to:"data",
+            timeStamp: Date.now()
+        }).then((res) => {
+            console.log(res);
+        }).catch((err) => {
+            console.log("ERROR ", err);
+        })
+      }
+
+    React.useEffect(() => {
+        const db = getDatabase();
+        const messageRef = query(ref(db, 'messages'),orderByChild("channelId"), equalTo("1221"));
+        onChildAdded(messageRef,(data) =>{
+            console.log(data.val());
+        })
+        return () => messageRef;
+    },[]);
     return (
         <View style={{flex:1, backgroundColor:dark, justifyContent:'space-between'}}>
             <View style={styles.container}>
@@ -39,7 +65,7 @@ const Performer = ({navigation}) => {
                         </View>
                     </View>
                     <View style={{flexDirection:'row', justifyContent:'center'}}>
-                        <TouchableOpacity style={styles.button} activeOpacity={0.6}>
+                        <TouchableOpacity style={styles.button} activeOpacity={0.6} onPress={() => {writeUserData(currentUser.id, currentUser.first_name, currentUser.email_id)}}>
                             <Icons name="message" size={30} color='#fff' style={{marginRight:20}} />
                             <Text style={{fontSize:20, fontWeight:'700', color:'#fff'}}>CHAT</Text>
                         </TouchableOpacity>
@@ -93,5 +119,8 @@ const styles = StyleSheet.create({
         elevation: 5,
     }
 })
+const mapStateToProps = state => ({
+    currentUser : state.user.currentUser
+})
 
-export default Performer;
+export default connect(mapStateToProps)(Performer);

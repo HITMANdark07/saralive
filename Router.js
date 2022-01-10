@@ -1,6 +1,5 @@
 // import 'react-native-gesture-handler';
 import React from 'react';
-import { View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -19,6 +18,9 @@ import Performer from './src/screens/Performer';
 import {LogBox } from 'react-native';
 LogBox.ignoreLogs(['Reanimated 2']);
 import { connect } from 'react-redux';
+import firebase from './src/firebase/config';
+
+// import {database } from 'firebase/'
 // import AddDoctor from './src/screens/AddDoctor';
 // import ManageDoctor from './src/screens/ManageDoctor';
 // import Template from './src/screens/Template';
@@ -52,6 +54,7 @@ function HomeDrawer() {
 // }
 
 const Router = ({currentUser}) => {
+
     return (
         <NavigationContainer>
             <Stack.Navigator>

@@ -22,6 +22,8 @@ target 'saralive' do
 
   pod 'react-native-agora', :path => '../node_modules/react-native-agora'
 
+  pod 'agora-react-native-rtm', :path => '../node_modules/agora-react-native-rtm'
+
   target 'saraliveTests' do
     inherit! :complete
     # Pods for testing

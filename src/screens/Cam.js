@@ -1,26 +1,123 @@
 import React from 'react';
-import { View, Text, StyleSheet,TouchableOpacity,ScrollView } from 'react-native';
+import { View, Text, StyleSheet,TouchableOpacity,ScrollView, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import { API } from '../../api.config';
+import { LogBox } from 'react-native';
+LogBox.ignoreAllLogs();
 import LottieView from 'lottie-react-native';
-import Icon from 'react-native-vector-icons/Entypo';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import Footer from '../components/Footer';
 import Ico from 'react-native-vector-icons/Entypo';
 import RtcEngine, { RtcLocalView, RtcRemoteView, VideoRenderMode } from 'react-native-agora';
+import { getDatabase, push, ref, set, orderByChild,remove, equalTo,onChildAdded, query, orderByValue, onValue, update } from "firebase/database";
 import requestCameraAndAudioPermission from '../permissions/permission';
-
+import { get } from 'react-native/Libraries/Utilities/PixelRatio';
+// import  RtmEngine  from 'agora-react-native-rtm';
+// const RtmEngine  = require('agora-react-native-rtm')
 
 const dark= '#10152F';
 const Cam = ({navigation, currentUser}) => {
-    const appId = "6a6e334589344ae69ae7f476a8ee8d59"
-    const channelName = "channel-x"
-    const token = "006db7d00a09c9f4fcba0634a73106db405IACBYhz30iv6wZ33yBXbTfRZbXxJcea0AfE22zAu856jfAJkFYoAAAAAEAB/8F67S5jYYQEAAQBKmNhh"
-
+    const appId = "bbd961c37a6945318efd2ed41ae214c1";
+    // const [token, setToken] = React.useState(null) 
     const [engine, setEngine] = React.useState(undefined);
+    const [rtmEngine, setRtmEngine] = React.useState(undefined);
     const [show, setShow] = React.useState(false);
     const [peerIds, setPeerIds] = React.useState([]);
-    // const [channelName, setChannelName] = React.useState("channel1");
     const [joinSucceed, setJoinSucceed] = React.useState(false);
+    const [channel, setChannel] = React.useState(null);
+    const [loading, setLoading] = React.useState(false);
+    const [waiting, setWaiting] = React.useState(false);
+    
+    // const [inCall , setInCall] = React.useState(false);
+    // const [inLobby, setInLobby] = React.useState(false);
+    // const [seniors, setSeniors] = React.useState([]);
+    // const [rooms, setRooms] = React.useState({});
+    
+    const createChannelWaiting = () => {
+        const db = getDatabase();
+        const onCamRef = ref(db, 'oncam');
+        const cams = push(onCamRef);
+        set(cams,{
+            channelId:Date.now(),
+            person1:currentUser.id,
+            person2:"",
+        }).then((res) => {
+            setChannel(cams.key);
+            startCall(cams.key,1);
+            setWaiting(true);
+        }).catch((err) => {
+            console.log("ERROR ", err);
+        })
+    };
+
+    const joinRandomChannel = () => {
+        const db = getDatabase();
+        const onCamRef = query(ref(db, 'oncam'),orderByChild("person2"), equalTo(""));
+        onValue(onCamRef,(snapshot) =>{
+            
+            if(snapshot.exists()){
+                const channels = [];
+                snapshot.forEach((childSnapshot) => {
+                    // console.log(childSnapshot.val());
+                    channels.push({
+                        ...childSnapshot.val(),
+                        id:childSnapshot.key
+                    })
+                    setChannel(childSnapshot.key);
+                })
+                // console.log("channels[0]",channels[0].id);
+                const cRef = ref(db,'oncam/'+channels[0].id);
+                update(cRef,{
+                    person2:currentUser.id
+                }).then(() =>{
+                    startCall(channels[0].id);
+                }).catch((err) =>{
+                    console.log(err);
+                })
+                // setChannel(channels[0].id)
+                console.log(channels[0].id);
+            }else{
+                createChannelWaiting();
+            }
+        },{
+            onlyOnce:true
+        })
+    }
+
+    const leaveChannel = (channel) => {
+        const db = getDatabase();
+        const rRef = ref(db, 'oncam/'+channel);
+        remove(rRef);
+        console.log("camref",rRef.key);
+    }
+
+    const [tm , setTm] = React.useState(undefined);
+    // console.log("CHANNEL",channel);
+    const startCall = React.useCallback(async (channelName, flag) => {
+        setLoading(true);
+        // Join Channel using null token and channel name
+        await engine?.joinChannel(null, channelName, null, currentUser.id)
+        console.log('startCall', channelName);
+        if(!flag){
+            tim=setTimeout(() => {
+                endCall(channelName);
+                joinRandomChannel();
+            },10000);
+            setTm(tim);
+        }
+    });
+
+
+    const endCall = React.useCallback(async (channel, flag) => {
+        // console.log(peerIds);
+        setPeerIds([]);
+        if(flag) setLoading(false);
+        clearTimeout(tm);
+        setJoinSucceed(false);
+        leaveChannel(channel);
+        await engine?.leaveChannel()
+    });
+    
 
     React.useEffect(() => {
         // variable used by cleanup function
@@ -38,6 +135,8 @@ const Cam = ({navigation, currentUser}) => {
                 console.log("inside try");
                 const rtcEngine = await RtcEngine.create(appId);
                 await rtcEngine.enableVideo();
+                // console.log(RtmEngine);
+                
 
                 // need to prevent calls to setEngine after the component has unmounted
                 if (isSubscribed) {
@@ -62,6 +161,12 @@ const Cam = ({navigation, currentUser}) => {
         engine?.addListener('UserJoined', (uid, elapsed) => {
             console.log('UserJoined', uid, elapsed)
             // If new user
+            setWaiting(false);
+            let tim = setTimeout(() => {
+                endCall(channel);
+                joinRandomChannel();
+            },10000)
+            setTm(tim);
             if (peerIds.indexOf(uid) === -1) {
                 // Add peer ID to state array
                 setPeerIds([...peerIds, uid])
@@ -71,6 +176,8 @@ const Cam = ({navigation, currentUser}) => {
         engine?.addListener('UserOffline', (uid, reason) => {
             console.log('UserOffline', uid, reason)
             // Remove peer ID from state array
+            endCall(channel);
+            joinRandomChannel();
             setPeerIds(peerIds.filter(id => id !== uid))
         })
 
@@ -83,11 +190,12 @@ const Cam = ({navigation, currentUser}) => {
             }
         })
 
-        // return a cleanup
         return () => {
-            console.log('unmount')
+            // console.log('unmount')
             isSubscribed = false;
-            console.log(engine)
+            // timeOut.cancel();
+            // leaveChannel(channel);
+            console.log("*********************************************");
             engine?.removeAllListeners();
             engine?.destroy();
         }
@@ -96,38 +204,6 @@ const Cam = ({navigation, currentUser}) => {
         // will run once on component mount or if engine changes
         [engine]
     );
-    console.log("peerId", peerIds);
-    // const renderRemoteVideos = () => {
-    //     return (
-    //         <ScrollView
-    //             // style={REMOTE_CONTAINER}
-    //             contentContainerStyle={{ paddingHorizontal: 2.5 }}
-    //             horizontal={true}>
-    //             {peerIds.map((value, index, array) => {
-    //                 return (
-    //                     <RtcRemoteView.SurfaceView
-    //                         // style={REMOTE}
-    //                         uid={value}
-    //                         channelId={channelName}
-    //                         renderMode={VideoRenderMode.Hidden}
-    //                         zOrderMediaOverlay={true} />
-    //                 )
-    //             })}
-    //         </ScrollView>
-    //     )
-    // }
-
-    const startCall = async () => {
-        // Join Channel using null token and channel name
-        await engine?.joinChannel(token, channelName, currentUser.id, 0)
-        console.log('startCall')
-    }
-
-    const endCall = async () => {
-        setPeerIds([]);
-        setJoinSucceed(false)
-        await engine?.leaveChannel()
-    }
     return (
         <View style={{flex:1, backgroundColor:dark, justifyContent:'space-between'}}>
             {/* <Text style={{color:'grey'}}>{JSON.stringify(currentUser)}</Text> */}
@@ -146,43 +222,52 @@ const Cam = ({navigation, currentUser}) => {
                   <Text style={{color:'white', fontSize:16}}> wheather you like each other or not. </Text>
                   <Text style={{color:'white', fontSize:16}}>Light up the heart if you find love at first sight!</Text>
               </View>
+              {waiting && joinSucceed && (<View>
+                  <Text style={{color:'#fff', fontSize:18, fontWeight:'300', alignSelf:'center'}}>Waiting No one is Online</Text>
+              </View>)}
               {
                   engine && joinSucceed && (
-                    <View style={{flexDirection:'row', justifyContent:'space-between', marginTop:40, margin:5}}>
-                        <View style={{borderRadius:20,overflow:'hidden' ,borderColor:'#fff', borderWidth:2}}>
+                    <View style={{flexDirection:'row', justifyContent:'space-between', flexWrap:'wrap', margin:5}}>
+                        
                         {
-                            peerIds.map((value) => (
-                                <RtcRemoteView.SurfaceView
-                                style={{ height:200, width:150 }}
-                                uid={value}
-                                channelId={channelName}
-                                renderMode={VideoRenderMode.Hidden}
-                                zOrderMediaOverlay={true} />
-                            ))
+                            peerIds.length>0 &&
+                            (<View style={{borderRadius:20,overflow:'hidden' ,borderColor:'#fff', borderWidth:2}}>
+                            <RtcRemoteView.SurfaceView
+                            style={{ height:200, width:150 }}
+                            uid={peerIds[0]}
+                            channelId={channel}
+                            renderMode={VideoRenderMode.Hidden}
+                            zOrderMediaOverlay={true} />
+                            </View>)
                         }
-                        </View>
 
                         <View style={{borderRadius:20,overflow:'hidden' ,borderColor:'#fff', borderWidth:2}}>
                         <RtcLocalView.SurfaceView
                         style={{ height:200, width:150 }}
-                        channelId={channelName}
+                        channelId={channel}
                         renderMode={VideoRenderMode.Hidden} />
                         </View>
                     </View>
                   )
               }
                 {
-                    show && !joinSucceed && (
-                        <TouchableOpacity style={styles.button} activeOpacity={0.6} onPress={startCall}>
+                    show && !joinSucceed && !loading && !joinSucceed ? (
+                        <TouchableOpacity style={styles.button} activeOpacity={0.6} onPress={joinRandomChannel}>
                             <Ico name="picasa" size={30} color='#fff' style={{marginRight:20}} />
                             <Text style={{fontSize:22, fontWeight:'700', color:'#fff'}}>START</Text>
-                        </TouchableOpacity>
-                    )
+                        </TouchableOpacity>)
+                        :
+                        (
+                            !joinSucceed && (
+                                <ActivityIndicator />
+                            )
+                        )
+                    
                 }
                 {
                     joinSucceed && (
-                        <TouchableOpacity style={[styles.button,{backgroundColor:'red'}]} activeOpacity={0.6} onPress={endCall}>
-                            <Text style={{fontSize:22, fontWeight:'700', color:'#fff'}}>EXIT MATCHING</Text>
+                        <TouchableOpacity style={[styles.button,{backgroundColor:'red'}]} activeOpacity={0.6} onPress={() => endCall(channel,1)}>
+                            <Icon name="call-end" size={30} color='#fff' style={{marginRight:20}} />
                         </TouchableOpacity>
                     )
                 }
@@ -203,6 +288,7 @@ const styles = StyleSheet.create({
         borderRadius:50,
         alignItems:'center',
         padding:8,
+        elevation:5,
         margin:5,
         shadowColor: "#fff",
         shadowOffset: {

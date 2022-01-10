@@ -7,7 +7,7 @@ const dark= '#10152F';
 const windowWidth = Dimensions.get('window').width;
 const PerformerCard = ({h}) => {
     return (
-        <View style={{height:h? 200 :250, width:(windowWidth/2)-15, borderRadius:50, margin:5}}>
+        <View style={{height:h? 150 :250, width:(windowWidth/2)-15, borderRadius:50, margin:5}}>
             <ImageBackground source={{uri:"https://pbs.twimg.com/profile_images/1280095122923720704/K8IvmzSY_400x400.jpg"}} resizeMode='cover' style={{flex:1, borderRadius:10, overflow: 'hidden'}}>
                 <View style={styles.container}>
                     <View style={{flexDirection:'row-reverse', padding:2}}>
