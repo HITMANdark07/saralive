@@ -6,7 +6,7 @@ import Ico from 'react-native-vector-icons/Ionicons';
 const dark= '#10152F';
 const windowWidth = Dimensions.get('window').width;
 const PerformerCard = ({h,performer}) => {
-    console.log(performer);
+    // console.log(performer);
     return (
         <View style={{height:h? 150 :250, width:(windowWidth/2)-15, borderRadius:50, margin:5}}>
             <ImageBackground source={{uri: performer && performer?.images?.length>0 ? performer?.images[0] : "https://pbs.twimg.com/profile_images/1280095122923720704/K8IvmzSY_400x400.jpg"}} resizeMode='cover' style={{flex:1, borderRadius:10, overflow: 'hidden'}}>
@@ -19,19 +19,19 @@ const PerformerCard = ({h,performer}) => {
                     </View>
                     
                     <View style={styles.contents}>
-                    <Text style={{color:'#fff', fontWeight:'600'}}>Performer Test</Text>
+                    <Text style={{color:'#fff', fontWeight:'600'}}>{performer?.f_name} {performer?.l_name}</Text>
                     <View style={{flexDirection:'row'}}>
                         <View style={styles.age}>
                             <Ico name="female" color={'#fff'} size={10} style={{marginRight:5}} />
-                            <Text style={{color:'#fff', fontSize:10}}>26</Text>
+                            <Text style={{color:'#fff', fontSize:10}}>{new Date().getFullYear() - new Date(performer?.dob).getFullYear()}</Text>
                         </View>
                         <View style={styles.country}>
-                            <Text style={{color:'#fff', fontSize:10, paddingLeft:5, paddingRight:5}}>India</Text>
+                            <Text style={{color:'#fff', fontSize:10, paddingLeft:5, paddingRight:5}}>{performer?.address.split(' ')[0]}</Text>
                         </View>
                     </View>
-                    <View>
+                    {/* <View>
                         <Text style={{color:'#fff', fontSize:10}}>lorem ipsum 💓 💓</Text>
-                    </View>
+                    </View> */}
                     </View>
                 </View>
             </ImageBackground>

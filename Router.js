@@ -19,6 +19,7 @@ import {LogBox } from 'react-native';
 LogBox.ignoreLogs(['Reanimated 2']);
 import { connect } from 'react-redux';
 import firebase from './src/firebase/config';
+import VideoCall from './src/screens/VideoCall';
 
 // import {database } from 'firebase/'
 // import AddDoctor from './src/screens/AddDoctor';
@@ -38,6 +39,7 @@ function HomeDrawer() {
         <Drawer.Screen name="Home" component={Home} options={{headerShown:false, unmountOnBlur:true}} />
         <Drawer.Screen name="OnCam" component={Cam} options={{headerShown:false, unmountOnBlur:true}} />
         <Drawer.Screen name="Messages" component={InboxScreen} options={{headerShown:false, unmountOnBlur:true}} />
+        <Drawer.Screen name="VideoCall" component={VideoCall} options={{headerShown:false, unmountOnBlur:true}} />
         <Drawer.Screen name="Me" component={Profile} options={{headerShown:false, unmountOnBlur:true}} />
         <Drawer.Screen name="Chat" component={ChatScreen} options={{headerShown:false, unmountOnBlur:true}} />
         <Drawer.Screen name="Performer" component={Performer} options={{headerShown:false, unmountOnBlur:true}} />

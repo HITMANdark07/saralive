@@ -2,13 +2,17 @@ import React from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Ico from 'react-native-vector-icons/Octicons';
+import Iconss from 'react-native-vector-icons/MaterialIcons';
 import Ic from 'react-native-vector-icons/FontAwesome5';
 import Icons from 'react-native-vector-icons/Entypo';
-import { getDatabase, push, ref, set, orderByChild, equalTo,onChildAdded, query, orderByValue } from "firebase/database";
+import { getDatabase, push, ref, set, orderByChild, equalTo,onChildAdded, query, orderByValue, onValue, update } from "firebase/database";
 import { connect } from 'react-redux';
 
 const dark= '#10152F';
-const Performer = ({navigation,currentUser}) => {
+const Performer = ({navigation,currentUser, route}) => {
+
+    const [show, setShow] = React.useState(false);
+    const p = route.params.performer;
     function writeUserData(userId, name, email) {
         const db = getDatabase();
         const messagesRef = ref(db, 'messages');
@@ -25,31 +29,78 @@ const Performer = ({navigation,currentUser}) => {
         })
       }
 
-    React.useEffect(() => {
+      const endCall = () => {
+        // route.params.engine?.leaveChannel();
         const db = getDatabase();
-        const messageRef = query(ref(db, 'messages'),orderByChild("channelId"), equalTo("1221"));
-        onChildAdded(messageRef,(data) =>{
-            console.log(data.val());
+        const paidRef = ref(db, 'paidcam/'+p?.id);
+        // const paid = push(paidRef);
+        update(paidRef,{
+            status:'pending',//pending, waiting, joined
+            person2:"",
+        }).then((res) => {
+        }).catch((err) => {
+            console.log("ERROR ", err);
         })
-        return () => messageRef;
+        
+    }
+
+    const init = () => {
+        try{
+            const db = getDatabase();
+            const paidRef = ref(db, 'paidcam/'+p?.id);
+            update(paidRef, {
+                person2:currentUser.id,
+                image : currentUser.image,
+                name : "USER",
+                status:'waiting'
+        });
+        }catch(err){
+            console.log(err);
+        }
+    }
+
+    React.useEffect(() => {
+        // const db = getDatabase();
+        // const messageRef = query(ref(db, 'messages'),orderByChild("channelId"), equalTo("1221"));
+        // onChildAdded(messageRef,(data) =>{
+        //     console.log(data.val());
+        // })
+        const db = getDatabase();
+        try{
+            const paidRef = ref(db,'paidcam/'+p?.id);
+            return onValue(paidRef, (snapshot) => {
+            if(snapshot?.val()?.status==='incall'){
+                setShow(false);
+                navigation.navigate("VideoCall", {id : p?.id});
+            }else if(snapshot?.val()?.status==='waiting'){
+                setShow(true);
+                console.log("CALLING...");
+            }else{
+                setShow(false);
+                console.log(snapshot?.val());
+            }
+        })
+        }catch(err){
+            console.log(err);
+        }
     },[]);
     return (
         <View style={{flex:1, backgroundColor:dark, justifyContent:'space-between'}}>
             <View style={styles.container}>
                 <View style={{flex:1}}>
-                    <Image source={{uri:'https://pbs.twimg.com/profile_images/1280095122923720704/K8IvmzSY_400x400.jpg'}} style={{flex:1}} />
+                    <Image source={{uri:p && p?.images?.length>0 ? p?.images[0] : "https://pbs.twimg.com/profile_images/1280095122923720704/K8IvmzSY_400x400.jpg"}} style={{flex:1}} />
                 </View>
                 <View style={styles.contents}>
                     <View style={{flexDirection:'row', justifyContent:'space-between'}}>
                         <View style={{flexDirection:'column',justifyContent:'space-between'}}>
-                            <Text style={{color:'#fff', fontSize:18, fontWeight:'700', marginBottom:5}}>Performer Test</Text>
+                            <Text style={{color:'#fff', fontSize:18, fontWeight:'700', marginBottom:5}}>{p?.f_name} {p?.l_name}</Text>
                             <View style={{flexDirection:'row'}}>
                                 <View style={{flexDirection:'row', alignItems:'center', backgroundColor:'#FF00FF', paddingLeft:8,paddingRight:8, borderRadius:10}}>
                                     <Icon name="female" color={'#fff'} size={10} style={{marginRight:5}} />
-                                    <Text style={{color:'#fff', fontSize:11}}>26</Text>
+                                    <Text style={{color:'#fff', fontSize:11}}>{new Date().getFullYear() - new Date(p?.dob).getFullYear()}</Text>
                                 </View>
                                 <View style={{backgroundColor:'#A020F0', paddingLeft:8,paddingRight:8, borderRadius:10, marginLeft:10}}>
-                                    <Text style={{color:'#fff', fontSize:11}}>India</Text>
+                                    <Text style={{color:'#fff', fontSize:11}}>{p?.address}</Text>
                                 </View>
                             </View>
                         </View>
@@ -60,20 +111,51 @@ const Performer = ({navigation,currentUser}) => {
                                 </View>
                                 <View style={{flexDirection:'row', alignItems:'center', paddingLeft:8,paddingRight:8, borderRadius:10}}>
                                     <Ic name="coins" color={'#FFFF00'} size={15} style={{marginRight:5}} />
-                                    <Text style={{color:'#fff', fontSize:13}}>30/min</Text>
+                                    <Text style={{color:'#fff', fontSize:13}}>{p?.coin_per_min}/min</Text>
                                 </View>
                         </View>
                     </View>
-                    <View style={{flexDirection:'row', justifyContent:'center'}}>
-                        <TouchableOpacity style={styles.button} activeOpacity={0.6} onPress={() => {writeUserData(currentUser.id, currentUser.first_name, currentUser.email_id)}}>
-                            <Icons name="message" size={30} color='#fff' style={{marginRight:20}} />
-                            <Text style={{fontSize:20, fontWeight:'700', color:'#fff'}}>CHAT</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.button} activeOpacity={0.6}>
-                            <Icons name="video-camera" size={30} color='#fff' style={{marginRight:20}} />
-                            <Text style={{fontSize:20, fontWeight:'700', color:'#fff'}}>Video Call</Text>
-                        </TouchableOpacity>
-                    </View>
+                    {
+                        !show ? 
+                        (
+                            <View style={{flexDirection:'row', justifyContent:'center'}}>
+                                <TouchableOpacity style={styles.button} activeOpacity={0.6} 
+                                // onPress={() => {writeUserData(currentUser.id, currentUser.first_name, currentUser.email_id)}}
+                                >
+                                    <Icons name="message" size={30} color='#fff' style={{marginRight:20}} />
+                                    <Text style={{fontSize:20, fontWeight:'700', color:'#fff'}}>CHAT</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.button} activeOpacity={0.6} onPress={init}>
+                                    <Icons name="video-camera" size={30} color='#fff' style={{marginRight:20}} />
+                                    <Text style={{fontSize:20, fontWeight:'700', color:'#fff'}}>Video Call</Text>
+                                </TouchableOpacity>
+                            </View>
+                        )
+                        :
+                        (
+                            <View style={{flexDirection:'column', flex:1, justifyContent:'center'}}>
+                                <Text style={{color:'#fff', fontSize:20, fontWeight:'300', textAlign:'center'}}>Calling...</Text>
+                                <TouchableOpacity 
+                                    onPress={endCall}
+                                    style={{
+                                    backgroundColor: 'red',
+                                    bottom:10,
+                                    height: 60,
+                                    width: 60,
+                                    borderRadius: 100,
+                                    alignItems: 'center',
+                                    zIndex:20,
+                                    alignSelf:'center',
+                                    marginTop:20,
+                                    justifyContent: 'center',
+                                    borderColor: '#fff',
+                                    borderWidth: 2,
+                                    }}>
+                                    <Iconss name="call-end" color="#fff" size={35} />
+                                    </TouchableOpacity>
+                            </View>
+                        )
+                    }
                 </View>
             </View>
             <View style={{position:'absolute'}}>

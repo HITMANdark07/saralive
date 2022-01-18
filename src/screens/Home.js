@@ -16,7 +16,7 @@ const Home = ({navigation, currentUser}) => {
 
     const [refreshing, setRefreshing] = React.useState(false);
     const [performers, setPerformers] = React.useState([]);
-    const [list, setList] = React.useState([]);
+    const [loading, setLoading] = React.useState(true);
 
     const getPerformersDetails = (listIds) => {
         const list = [];
@@ -36,25 +36,36 @@ const Home = ({navigation, currentUser}) => {
         });
         // setPerformers(list);
     }
-    const onRefresh = React.useCallback(() => {
-        setRefreshing(true);
-        wait(2000).then(() => setRefreshing(false));
-      }, []);
-    
-    React.useEffect(() => {
+
+    const init = () => {
         const db = getDatabase();
         const paidRef = query(ref(db, 'paidcam'),orderByChild("person2"), equalTo(""));
-        onValue(paidRef, (snapshot) => {
+         return onValue(paidRef, (snapshot) => {
+            setLoading(false);
             const perform = [];
             snapshot.forEach((snap) => {
                 perform.push(snap.key);
                 // console.log(snap.key);
             })
-            console.log(perform);
-            getPerformersDetails(perform);
+            // console.log(perform);
+            if(perform.length!=0){
+                getPerformersDetails(perform);
+            }
+        },{
+            onlyOnce:true
         })
+    }
+    const onRefresh = React.useCallback(() => {
+        setPerformers([]);
+        init();
+      }, []);
+
+    
+    
+    React.useEffect(() => {
+        init();
     },[]);
-    console.log(performers);
+    // console.log(performers);
     return (
         <View style={{flex:1, backgroundColor:dark}}>
             <View style={{backgroundColor:'#1A224B', borderBottomLeftRadius:50, borderBottomRightRadius:50, marginBottom:20}}>
@@ -71,7 +82,7 @@ const Home = ({navigation, currentUser}) => {
                 <View style={{flexDirection:'column', justifyContent:'flex-start'}}>
                 {
                     performers.map((p,idx) => (
-                        <TouchableOpacity activeOpacity={0.5} key={idx} onPress={() => { navigation.navigate('Performer')}}>
+                        <TouchableOpacity activeOpacity={0.5} key={idx} onPress={() => { navigation.navigate('Performer', { performer:p })}}>
                             <PerformerCard  performer={p} />
                             {/* <PerformerCard h={idx===0 ? true:false} performer={p} /> */}
                         </TouchableOpacity>
@@ -79,6 +90,13 @@ const Home = ({navigation, currentUser}) => {
                 }
 
                  </View>
+                 {
+                     performers.length===0 && !loading && (
+                        <View>
+                            <Text style={{textAlign:'center', color:'#fff', fontSize:22, fontWeight:'300'}}>No one is Online...</Text>
+                        </View>
+                     )
+                 }
                 {/*<View style={{flexDirection:'column'}}>
                 <TouchableOpacity activeOpacity={0.5} onPress={() => { navigation.navigate('Performer')}}>
                     <PerformerCard />
