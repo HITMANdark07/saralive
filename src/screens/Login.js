@@ -12,49 +12,45 @@ import Ico from 'react-native-vector-icons/AntDesign';
 const theme1 = "#E5E5E5";
 const Login = ({navigation, setUser}) => {
 
-    const [username, setUserName] = React.useState("");
+    const [phone, setPhone] = React.useState("");
     const [password, setPassword] = React.useState("");
-    const [loading, setLoading] = React.useState(false);
+    // const [loading, setLoading] = React.useState(false);
     const handleChange = (name, e) => {
-        switch(name){
-            case 'username':
-                setUserName(e);
-                break;
-            case 'password':
-                setPassword(e);
-                break;
-            default:
-                console.log(e);
+        if(name==="phone"){
+            setPhone(e);
         }
     }
     const login = () => {
-        setLoading(true);
-        const formData = new FormData();
-        formData.append("email_phno",username);
-        formData.append("password",password);
+        // setLoading(true);
+        // const formData = new FormData();
+        // formData.append("email_phno",username);
+        // formData.append("password",password);
+        if(phone.length>0){
+            navigation.navigate('Otp', {phone:phone})
+        }
 
-        axios({
-            method:'post',
-            url:`${API}/user-login`,
-            data:formData,
-        }).then((res) => {
-            setLoading(false);
-            console.log(res.data);
-            if(res.data.isSuccess){
-                console.log(res.data.isSuccess);
-                ToastAndroid.showWithGravity(res.data.api_message, ToastAndroid.LONG, ToastAndroid.CENTER);
-                setUserName("");
-                setPassword("");
-                console.log(res.data.user_details);
-                setUser(res.data.user_details);
-            }else{
-                ToastAndroid.showWithGravity(res.data.api_message, ToastAndroid.LONG, ToastAndroid.CENTER);
-                console.log(res.data.api_message);
-            }
-        }).catch((err) =>{
-            console.log("ERROR",err);
-            setLoading(false);
-        })
+        // axios({
+        //     method:'post',
+        //     url:`${API}/user-login`,
+        //     data:formData,
+        // }).then((res) => {
+        //     setLoading(false);
+        //     console.log(res.data);
+        //     if(res.data.isSuccess){
+        //         console.log(res.data.isSuccess);
+        //         ToastAndroid.showWithGravity(res.data.api_message, ToastAndroid.LONG, ToastAndroid.CENTER);
+        //         setUserName("");
+        //         setPassword("");
+        //         console.log(res.data.user_details);
+        //         setUser(res.data.user_details);
+        //     }else{
+        //         ToastAndroid.showWithGravity(res.data.api_message, ToastAndroid.LONG, ToastAndroid.CENTER);
+        //         console.log(res.data.api_message);
+        //     }
+        // }).catch((err) =>{
+        //     console.log("ERROR",err);
+        //     setLoading(false);
+        // })
     }
     return (
         <View style={{flex:1}}>
@@ -67,10 +63,10 @@ const Login = ({navigation, setUser}) => {
             <Text style={{color:'#fff', fontSize:40, textAlign:'center', fontWeight:'700', fontFamily:'Helvetica'}}>LOGIN</Text>
             <View style={styles.container}>
                 <View style={{flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
-                    <InputText name="username" icon="person" placeholder="Email or Phone" value={username} handleChange={handleChange}  />
-                    <InputText name="password" icon="lock" placeholder="Password" value={password} handleChange={handleChange} password={true}  />
+                    <InputText name="phone" icon="phone" placeholder="Phone" value={phone} handleChange={handleChange} type="numeric"  />
+                    {/* <InputText name="password" icon="lock" placeholder="Password" value={password} handleChange={handleChange} password={true}  /> */}
                 </View>
-                {
+                {/* {
                     loading ?
                     (
                         <View style={{alignSelf:'center'}}>
@@ -78,13 +74,13 @@ const Login = ({navigation, setUser}) => {
                         </View>
                     )
                     :
-                    (
+                    ( */}
                         <TouchableOpacity style={styles.button} onPress={login}>
                             <Ico name="login" size={30} color='#fff' style={{marginRight:20}} />
-                            <Text style={{fontSize:22, fontWeight:'400', color:'#fff'}}>LOGIN</Text>
+                            <Text style={{fontSize:22, fontWeight:'400', color:'#fff'}}>Send OTP</Text>
                         </TouchableOpacity>
-                    )
-                }
+                    {/* )
+                } */}
                 
             </View>
             </LinearGradient>

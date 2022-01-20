@@ -5,7 +5,8 @@ import { getDatabase, push, ref, set, orderByChild,remove, equalTo,onChildAdded,
 import requestCameraAndAudioPermission from '../permissions/permission';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { connect } from 'react-redux';
-import { NavigationContainer } from '@react-navigation/native';
+import axios from 'axios';
+import { API } from '../../api.config';
 LogBox.ignoreLogs([
     'Non-serializable values were found in the navigation state',
 ]);
@@ -27,6 +28,9 @@ const VideoCall = ({currentUser, route, navigation}) => {
         update(paidRef,{
             status:'pending',//pending, waiting, joined
             person2:"",
+            image : "",
+            maxtime: 0,
+            name : "",
         }).then((res) => {
         }).catch((err) => {
             console.log("ERROR ", err);
@@ -110,7 +114,7 @@ const VideoCall = ({currentUser, route, navigation}) => {
                 setJoinSucceed(true)
             }
         })
-        engine?.joinChannel(null, p, null, currentUser.id);
+        engine?.joinChannel(null, p, null, +(currentUser.user_id));
         // console.log(currentUser);
         return () => {
             console.log(engine)
@@ -128,6 +132,7 @@ const VideoCall = ({currentUser, route, navigation}) => {
         // will run once on component mount or if engine changes
         [engine]
     );
+    
 
     React.useEffect(() => {
         const db = getDatabase();
@@ -139,6 +144,32 @@ const VideoCall = ({currentUser, route, navigation}) => {
             }
         })
     },[]);
+
+    React.useEffect(() => {
+        const db = getDatabase();
+        let max = 6000;
+        const paidRef = ref(db, 'paidcam/'+p);
+        onValue(paidRef, (snapshot) => {
+            max = snapshot?.val()?.maxtime || 6000;
+        }, {onlyOnce:true});
+        let count =0;
+        let timer = setInterval(() => {
+            count+=100;
+            if(count>max){
+                endCall();
+            }
+        },100);
+        return () => {
+            clearInterval(timer);
+            console.log(Math.ceil(count/60000), "min elapsed");
+            // axios({
+            //     method:'POST',
+            //     url:`${API}/`,
+
+            // })
+        }
+        
+    },[])
     return (
         <View style={{flex:1, backgroundColor:dark}}>
             {peerIds.length>0 ? 

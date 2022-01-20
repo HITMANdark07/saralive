@@ -1,5 +1,5 @@
 import React from 'react'
-import { View,ImageBackground, Text, ActivityIndicator, StyleSheet, TouchableOpacity, ToastAndroid } from 'react-native'
+import { View, Text, ActivityIndicator, StyleSheet, TouchableOpacity, ToastAndroid } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons';
 import Ico from 'react-native-vector-icons/MaterialIcons';
 import InputText from '../components/InputText';
@@ -11,57 +11,59 @@ import { API } from '../../api.config';
 
 
 const theme1 = "#E5E5E5";
-const SignUp = ({navigation, setUser}) => {
-
-    const [firstName, setFirstName] = React.useState("");
-    const [lastName, setLastName] = React.useState("");
-    const [email , setEmail] = React.useState("");
-    const [phone, setPhone] = React.useState("");
-    const [password, setPassword] = React.useState("");
+const OtpScreen = ({navigation, setUser, route}) => {
+    const phone = route.params.phone;
     const [loading, setLoading] = React.useState(false);
+    const [otp, setOtp] = React.useState("");
     const handleChange = (name, e) => {
-        switch(name){
-            case 'firstName':
-                setFirstName(e);
-                break;
-            case 'lastName':
-                setLastName(e);
-                break;
-            case 'email':
-                setEmail(e);
-                break;
-            case 'phone':
-                setPhone(e);
-                break;
-            case 'password':
-                setPassword(e);
-                break;
-            default:
-                console.log("none",e);
+        if(name==="otp"){
+            setOtp(e);
+        }else{
+            console.log(e);
         }
+        
     }
-    const register = () => {
+
+    const init = () => {
+        axios({
+            method:'POST',
+            url:`${API}/send_otp`,
+            data:{phone_no:phone}
+        }).then((res) => {
+            if(res.data.responseCode){
+                // ToastAndroid.showWithGravity(res.data.responseText, ToastAndroid.CENTER, ToastAndroid.SHORT);
+                setOtp(res.data.responseData);
+            }
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
+    const verify = () => {
         setLoading(true);
         const formData = new FormData();
-        formData.append("name",firstName);
-        formData.append('email', email);
-        formData.append('telephone', phone);
-        console.log(formData);
+        formData.append('phone_no',phone);
+        formData.append("otp",otp);
+        // console.log(formData);
 
         axios({
             method:'post',
-            url:`${API}/customer_register`,
+            url:`${API}/verify_otp`,
             data:formData,
         }).then((res) => {
             setLoading(false);
-            // console.log(res.data);
+            console.log(res.data);
             if(res.data.responseCode){
-                console.log(res.data.responseText);
-                ToastAndroid.showWithGravity(res.data.responseText, ToastAndroid.CENTER, ToastAndroid.SHORT);
+                // console.log(res.data.isSuccess);
                 console.log(res.data.responseData);
-                navigation.navigate('Otp',{phone:phone})
+                if(res.data.isRegister=="0"){
+                    ToastAndroid.showWithGravity("Phone number is not Registered", ToastAndroid.CENTER, ToastAndroid.SHORT);
+                    navigation.goBack();
+                    return ;
+                }
+                ToastAndroid.showWithGravity(res.data.responseText, ToastAndroid.CENTER, ToastAndroid.SHORT);
+                setUser(res.data.responseData);
             }else{
-                ToastAndroid.showWithGravity(res.data.responseText, ToastAndroid.LONG, ToastAndroid.CENTER);
+                ToastAndroid.showWithGravity(res.data.responseText, ToastAndroid.CENTER, ToastAndroid.SHORT);
                 console.log(res.data.responseText)
             }
         }).catch((err) =>{
@@ -70,6 +72,10 @@ const SignUp = ({navigation, setUser}) => {
         })
         
     }
+
+    React.useState(() => {
+        init();
+    },[]);
     return (
         <View style={{flex:1, backgroundColor:theme1}}>
         <LinearGradient colors={['#BC7BE4', '#10152F']}  style={{flex:1, justifyContent:'center'}} >
@@ -78,14 +84,14 @@ const SignUp = ({navigation, setUser}) => {
         }}>
             <Icon name='chevron-back-outline' color={'#fff'} size={30}/>
         </TouchableOpacity>
-            <Text style={{color:'#fff', fontSize:40, textAlign:'center', fontWeight:'700', fontFamily:'Helvetica'}}>REGISTER</Text>
+            <Text style={{color:'#fff', fontSize:30, textAlign:'center', fontWeight:'700', fontFamily:'Helvetica'}}>Verify OTP</Text>
             <View style={styles.container}>
                 <View style={{flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
-                    <InputText name="firstName" icon="person" placeholder="Your Name" value={firstName} handleChange={handleChange}  />
+                
                     {/* <InputText name="lastName" icon="person" placeholder="Last Name" value={lastName} handleChange={handleChange}  /> */}
-                    <InputText name="email" icon="email" placeholder="Email" value={email} handleChange={handleChange}  />
-                    <InputText name="phone" icon="phone" placeholder="Phone" value={phone} handleChange={handleChange} type="numeric"  />
-                    {/* <InputText name="password" icon="lock" placeholder="Password" value={password} handleChange={handleChange} password={true}  /> */}
+                    {/* <InputText name="email" icon="email" placeholder="Email" value={email} handleChange={handleChange}  /> */}
+                    {/* <InputText name="phone" icon="phone" placeholder="Phone" value={phone} handleChange={handleChange} type="numeric"  /> */}
+                    <InputText name="otp" icon="lock" placeholder="OTP" value={otp} handleChange={handleChange} type="numeric"  />
                 </View>
                 {
                     loading ?
@@ -96,9 +102,9 @@ const SignUp = ({navigation, setUser}) => {
                     )
                     :
                     (
-                        <TouchableOpacity style={styles.button} onPress={register} >
-                            <Ico name="person-add-alt-1" size={30} color='#fff' style={{marginRight:20}} />
-                            <Text style={{fontSize:22, fontWeight:'400', color:'#fff'}}>SIGNUP</Text>
+                        <TouchableOpacity style={styles.button} onPress={verify} >
+                            <Ico name="verified" size={30} color='#fff' style={{marginRight:20}} />
+                            <Text style={{fontSize:22, fontWeight:'400', color:'#fff'}}>Verify</Text>
                         </TouchableOpacity>
                     )
                 }
@@ -145,4 +151,4 @@ const mapDispatchToProps = (dispatch) => ({
     setUser : user =>  dispatch(setCurrentUser(user))
 })
 
-export default connect(null, mapDispatchToProps)(SignUp);
+export default connect(null, mapDispatchToProps)(OtpScreen);

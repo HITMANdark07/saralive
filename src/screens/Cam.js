@@ -39,7 +39,7 @@ const Cam = ({navigation, currentUser}) => {
         const cams = push(onCamRef);
         set(cams,{
             channelId:Date.now(),
-            person1:currentUser.id,
+            person1:currentUser.user_id,
             person2:"",
         }).then((res) => {
             setChannel(cams.key);
@@ -68,7 +68,7 @@ const Cam = ({navigation, currentUser}) => {
                 // console.log("channels[0]",channels[0].id);
                 const cRef = ref(db,'oncam/'+channels[0].id);
                 update(cRef,{
-                    person2:currentUser.id
+                    person2:currentUser.user_id
                 }).then(() =>{
                     startCall(channels[0].id);
                 }).catch((err) =>{
@@ -96,7 +96,7 @@ const Cam = ({navigation, currentUser}) => {
     const startCall = React.useCallback(async (channelName, flag) => {
         setLoading(true);
         // Join Channel using null token and channel name
-        await engine?.joinChannel(null, channelName, null, currentUser.id)
+        await engine?.joinChannel(null, channelName, null, +(currentUser.user_id))
         console.log('startCall', channelName);
         if(!flag){
             tim=setTimeout(() => {

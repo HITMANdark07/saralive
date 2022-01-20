@@ -8,23 +8,39 @@ import Ico from 'react-native-vector-icons/Ionicons';
 import Ic from 'react-native-vector-icons/FontAwesome5';
 import Footer from '../components/Footer';
 import { setCurrentUser } from '../redux/user/user.action';
+import axios from 'axios';
 
 const dark= '#10152F';
 const Profile = ({navigation, currentUser, setUser}) => {
 
-
-
-
+    console.log(currentUser);
+    const [coins, setCoins] = React.useState(0.00);
+    const init = () => {
+        axios({
+            method:'POST',
+            url:`${API}/customer_wallet_balance`,
+            data:{customer_id: currentUser.user_id}
+        }).then((res) => {
+            if(res.data.responseCode){
+                setCoins((+(res.data.responseData)).toFixed(2));
+            }
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
     const signOut = () => {
         setUser(null);
     }
+    React.useEffect(() => {
+        init();
+    },[]);
     return (
         <View style={{flex:1, backgroundColor:dark}}>
             {/* <Text style={{color:'#fff'}}>{JSON.stringify(currentUser)}</Text> */}
             <ImageBackground source={require("../../assets/images/date.jpg")} resizeMode='cover' style={{flex:1}} >
             <View style={{padding:20, flexDirection:'column'}}>
             {
-             currentUser && currentUser.image ?
+             currentUser && currentUser.profile_image ?
              
              (
                 <Image source={{uri : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyQbC0yxIUoik0WypTTIFH8Kf_D-Efpas8Hw&usqp=CAU'}} style={{width:100, height:100, borderRadius:100,borderColor:'#fff', borderWidth:1}} />
@@ -36,7 +52,7 @@ const Profile = ({navigation, currentUser, setUser}) => {
               </View>
              )
            }
-                <Text style={{color:'#fff', fontWeight:'700', fontSize:22, marginTop:10}}>{currentUser.first_name} {currentUser.last_name}</Text>
+                <Text style={{color:'#fff', fontWeight:'700', fontSize:22, marginTop:10}}>{currentUser.name}</Text>
                 <View style={{backgroundColor:currentUser.sex==='female' ? '#FF00FF':'#4169E1',justifyContent:'flex-start', width:30, borderRadius:50}}>
                     <Ico name={currentUser.sex ==='female' ? "female":"male"} size={20} color="#fff" style={{padding:5}} />
                 </View>
@@ -51,7 +67,7 @@ const Profile = ({navigation, currentUser, setUser}) => {
                     </View>
                     <View style={{flexDirection:'column', justifyContent:'space-evenly', flex:1, marginTop:10, marginBottom:10}}>
                         <Text style={{color:'#fff', fontSize:20, fontWeight:'800'}}>Coin Store</Text>
-                        <Text style={{color:'#fff', fontSize:14, fontWeight:'400'}}>My Coins: {currentUser.wallet_coin} </Text>
+                        <Text style={{color:'#fff', fontSize:14, fontWeight:'400'}}>My Coins: {coins} </Text>
                     </View>
                     <View style={{padding:20, justifyContent:'center'}}>
                         <Ic name="chevron-right" size={30} color='#fff' />

@@ -15,6 +15,7 @@ import InboxScreen from './src/screens/InboxScreen';
 import ChatScreen from './src/screens/ChatScreen';
 import Profile from './src/screens/Profile';
 import Performer from './src/screens/Performer';
+import OtpScreen from './src/screens/OtpScreen';
 import {LogBox } from 'react-native';
 LogBox.ignoreLogs(['Reanimated 2']);
 import { connect } from 'react-redux';
@@ -69,6 +70,7 @@ const Router = ({currentUser}) => {
                     <>
                     <Stack.Screen name='Main' component={Main} options={{headerShown:false}} />
                     <Stack.Screen name='Login' component={Login} options={{headerShown:false}}  />
+                    <Stack.Screen name='Otp' component={OtpScreen} options={{headerShown:false}}  />
                     <Stack.Screen name='SignUp' component={SignUp} options={{headerShown:false}} />
                     </>
                 }

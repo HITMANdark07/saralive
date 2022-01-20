@@ -1,1 +1,1 @@
-export const API = "https://creativesyntax.in/saralive/api/v1";
+export const API = "https://bengalmarine.in/chat_app/api/v1";
