@@ -17,7 +17,7 @@ const Home = ({navigation, currentUser}) => {
     const [refreshing, setRefreshing] = React.useState(false);
     const [performers, setPerformers] = React.useState([]);
     const [loading, setLoading] = React.useState(true);
-
+    // console.log(currentUser);
     const getPerformersDetails = (listIds) => {
         const list = [];
         listIds.forEach((id) => {

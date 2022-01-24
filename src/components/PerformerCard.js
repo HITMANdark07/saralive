@@ -9,7 +9,7 @@ const PerformerCard = ({h,performer}) => {
     // console.log(performer);
     return (
         <View style={{height:h? 150 :250, width:(windowWidth/2)-15, borderRadius:50, margin:5}}>
-            <ImageBackground source={{uri: performer && performer?.images?.length>0 ? performer?.images[0] : "https://pbs.twimg.com/profile_images/1280095122923720704/K8IvmzSY_400x400.jpg"}} resizeMode='cover' style={{flex:1, borderRadius:10, overflow: 'hidden'}}>
+            <ImageBackground source={{uri: !performer && performer?.images?.length>0 ? performer?.images[0].image : "https://pbs.twimg.com/profile_images/1280095122923720704/K8IvmzSY_400x400.jpg"}} resizeMode='cover' style={{flex:1, borderRadius:10, overflow: 'hidden'}}>
                 <View style={styles.container}>
                     <View style={{flexDirection:'row-reverse', padding:2}}>
                         <View style={styles.status}>

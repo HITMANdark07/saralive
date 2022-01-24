@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image, ToastAndroid } from 'r
 import Icon from 'react-native-vector-icons/Ionicons';
 import Ico from 'react-native-vector-icons/Octicons';
 import Iconss from 'react-native-vector-icons/MaterialIcons';
+import SimpleIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Ic from 'react-native-vector-icons/FontAwesome5';
 import Icons from 'react-native-vector-icons/Entypo';
 import { getDatabase, push, ref, set, orderByChild, equalTo,onChildAdded, query, orderByValue, onValue, update } from "firebase/database";
@@ -16,7 +17,24 @@ const Performer = ({navigation,currentUser, route}) => {
     const [show, setShow] = React.useState(false);
     const [busy, setBusy] = React.useState(false);
     const [coins, setCoins] = React.useState(0);
+    const [follow, setFollow] = React.useState(false);
     const p = route.params.performer;
+
+    const followher = () => {
+        axios({
+            method:'POST',
+            url:`${API}/performer_follow`,
+            data:{user_id:currentUser.user_id,performer_id:p?.id}
+        }).then((res) => {
+            if(res.data.responseCode){
+                setFollow(true);
+            }
+            ToastAndroid.showWithGravity(res.data.responseText,ToastAndroid.CENTER, ToastAndroid.SHORT);
+            
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
     function writeUserData(userId, name, email) {
         const db = getDatabase();
         const messagesRef = ref(db, 'messages');
@@ -119,7 +137,11 @@ const Performer = ({navigation,currentUser, route}) => {
         <View style={{flex:1, backgroundColor:dark, justifyContent:'space-between'}}>
             <View style={styles.container}>
                 <View style={{flex:1}}>
-                    <Image source={{uri:p && p?.images?.length>0 ? p?.images[0] : "https://pbs.twimg.com/profile_images/1280095122923720704/K8IvmzSY_400x400.jpg"}} style={{flex:1}} />
+                    <Image source={{uri: !p && p?.images?.length>0 ? p?.images[0].image : "https://pbs.twimg.com/profile_images/1280095122923720704/K8IvmzSY_400x400.jpg"}} style={{flex:1}} />
+                    <TouchableOpacity style={styles.f_button} activeOpacity={0.6} onPress={followher}>
+                        <SimpleIcons name="user-follow" color={!follow ? "purple": "#fff"} size={20} />
+                        <Text style={{color:!follow ? "purple": "#fff", fontWeight:'400'}}>{follow ? "FOLLOWED":"FOLLOW"}</Text>
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.contents}>
                     <View style={{flexDirection:'row', justifyContent:'space-between'}}>
@@ -220,6 +242,20 @@ const styles = StyleSheet.create({
         flexDirection:'column',
         justifyContent:'space-between',
         padding:15
+    },
+    f_button:{
+        // right:0,
+        position:'absolute',
+        right:0,
+        bottom:0,
+        padding:10,
+        backgroundColor:'#4BD5CF',
+        width:110,
+        borderRadius:20,
+        margin:10,
+        display:'flex',
+        flexDirection:'row',
+        justifyContent:'space-evenly'
     },
     button:{
         backgroundColor:'#4BD5CF',
