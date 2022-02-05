@@ -10,6 +10,7 @@ import { getDatabase, push, ref, set, orderByChild, equalTo,onChildAdded, query,
 import { connect } from 'react-redux';
 import axios from 'axios';
 import { API } from '../../api.config';
+import sha256 from 'crypto-js/sha256'
 
 const dark= '#10152F';
 const Performer = ({navigation,currentUser, route}) => {
@@ -19,7 +20,9 @@ const Performer = ({navigation,currentUser, route}) => {
     const [coins, setCoins] = React.useState(0);
     const [follow, setFollow] = React.useState(false);
     const p = route.params.performer;
-
+    console.log(p);
+    const hash = sha256(p.email+currentUser.user_id).words[0];
+    console.log(hash);
     const followher = () => {
         axios({
             method:'POST',
@@ -35,21 +38,68 @@ const Performer = ({navigation,currentUser, route}) => {
             console.log(err);
         })
     }
-    function writeUserData(userId, name, email) {
+    // function writeUserData(userId, name, email) {
+    //     const db = getDatabase();
+    //     const messagesRef = ref(db, 'messages');
+    //     const newMessage = push(messagesRef);
+    //     set(newMessage,{
+    //         channelId:"1221",
+    //         from:userId,
+    //         to:"data",
+    //         timeStamp: Date.now()
+    //     }).then((res) => {
+    //         console.log(res);
+    //     }).catch((err) => {
+    //         console.log("ERROR ", err);
+    //     })
+    //   }
+
+    function goToChat(){
         const db = getDatabase();
-        const messagesRef = ref(db, 'messages');
-        const newMessage = push(messagesRef);
-        set(newMessage,{
-            channelId:"1221",
-            from:userId,
-            to:"data",
-            timeStamp: Date.now()
-        }).then((res) => {
-            console.log(res);
-        }).catch((err) => {
-            console.log("ERROR ", err);
+        const onCamRef = query(ref(db, 'client/'+currentUser.user_id),orderByChild("channelId"), equalTo(hash));
+        onValue(onCamRef,(snapshot) => {
+            if(snapshot.exists()){
+                navigation.navigate('Chat',{channelId:hash, performer:p.id,performer_name:snapshot.val().performer_name});
+            }else{
+                createChatChannel();
+            }
+        },{
+            onlyOnce:true
         })
-      }
+    }
+
+    function createChatChannel() {
+    const db = getDatabase();
+    const clientRef = ref(db, 'client/'+currentUser.user_id+"/"+hash);
+    set(clientRef,{
+        channelId:hash,
+        client:currentUser.user_id,
+        performer_name:p.f_name+" "+p.l_name,
+        client_name:currentUser.name,
+        performer:p.id,
+        last_message:'...',
+        timeStamp: Date.now()
+    }).then((res) => {
+        console.log(res);
+    }).catch((err) => {
+        console.log("ERROR ", err);
+    })
+
+    const performerRef = ref(db, 'performer/'+p.id+"/"+hash);
+    set(performerRef,{
+        channelId:hash,
+        client:currentUser.user_id,
+        performer_name:p.f_name+" "+p.l_name,
+        client_name:currentUser.name,
+        performer:p.id,
+        last_message:'...',
+        timeStamp: Date.now()
+    }).then((res) => {
+        console.log(res);
+    }).catch((err) => {
+        console.log("ERROR ", err);
+    })
+    }
 
       const endCall = () => {
         // route.params.engine?.leaveChannel();
@@ -173,7 +223,7 @@ const Performer = ({navigation,currentUser, route}) => {
                         (
                             <View style={{flexDirection:'row', justifyContent:'center'}}>
                                 <TouchableOpacity style={styles.button} activeOpacity={0.6} 
-                                // onPress={() => {writeUserData(currentUser.id, currentUser.first_name, currentUser.email_id)}}
+                                onPress={() => {goToChat()}}
                                 >
                                     <Icons name="message" size={30} color='#fff' style={{marginRight:20}} />
                                     <Text style={{fontSize:20, fontWeight:'700', color:'#fff'}}>CHAT</Text>
