@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {
   View,
   Text,
@@ -36,6 +36,8 @@ const ChatScreen = ({navigation, currentUser, route}) => {
 
   const [messages, setMessages] = React.useState([]);
   const [message, setMessage] = React.useState('');
+  const scrollRef = useRef();
+
   const init = () => {
     const db = getDatabase();
     const messagesRef = query(
@@ -158,7 +160,8 @@ const ChatScreen = ({navigation, currentUser, route}) => {
           {performer_name}
         </Text>
       </View>
-      <ScrollView style={{flex: 1}}>
+      <ScrollView style={{flex: 1}} ref={scrollRef}
+        onContentSizeChange={() => scrollRef.current.scrollToEnd({ animated: true })}>
         <View style={{display: 'flex', flexDirection: 'column'}}>
                     {messages.map((msg,idx) => {
                         const l = JSON.stringify(msg);

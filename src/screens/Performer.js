@@ -59,7 +59,7 @@ const Performer = ({navigation,currentUser, route}) => {
         const onCamRef = query(ref(db, 'client/'+currentUser.user_id),orderByChild("channelId"), equalTo(hash));
         onValue(onCamRef,(snapshot) => {
             if(snapshot.exists()){
-                navigation.navigate('Chat',{channelId:hash, performer:p.id,performer_name:snapshot.val().performer_name});
+                navigation.navigate('Chat',{channelId:hash, performer:p.id,performer_name:p.f_name+" "+p.l_name});
             }else{
                 createChatChannel();
             }
@@ -81,6 +81,7 @@ const Performer = ({navigation,currentUser, route}) => {
         timeStamp: Date.now()
     }).then((res) => {
         console.log(res);
+        navigation.navigate('Chat',{channelId:hash, performer:p.id,performer_name:p.f_name+" "+p.l_name});
     }).catch((err) => {
         console.log("ERROR ", err);
     })
