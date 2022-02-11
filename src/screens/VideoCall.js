@@ -18,6 +18,7 @@ const VideoCall = ({currentUser, route, navigation}) => {
     const [peerIds, setPeerIds] = React.useState([]);
     const [engine, setEngine] = React.useState(null);
     const [joinSucceed,setJoinSucceed] = React.useState(false);
+    const [counter, setCounter] = React.useState(0);
     // console.log("Engine",route.params.engine);
     const endCall = () => {
         // route.params.engine?.leaveChannel();
@@ -159,8 +160,12 @@ const VideoCall = ({currentUser, route, navigation}) => {
                 endCall();
             }
         },100);
+        const c = setInterval(() => {
+            setCounter((prev) => prev+1);
+        },1000);
         return () => {
             clearInterval(timer);
+            clearInterval(c);
             console.log(Math.ceil(count/60000), "min elapsed");
             // axios({
             //     method:'POST',
@@ -225,6 +230,9 @@ const VideoCall = ({currentUser, route, navigation}) => {
                 </TouchableOpacity>
             </View> */}
             <View style={{flex:1, alignItems:'center'}}>
+            <View >
+                <Text style={{color:'white', fontWeight:'600', marginTop:-60}}>{parseInt((counter/(60)))>9 ? parseInt((counter/(60))) : `0`+parseInt((counter/(60)))}: {parseInt((counter%(60)))>9 ? parseInt((counter%(60))) : `0`+parseInt((counter%(60)))}</Text>
+            </View>
             <TouchableOpacity 
                 onPress={endCall}
                 style={{
