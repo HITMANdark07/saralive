@@ -19,6 +19,7 @@ const Performer = ({navigation,currentUser, route}) => {
     const [busy, setBusy] = React.useState(false);
     const [coins, setCoins] = React.useState(0);
     const [follow, setFollow] = React.useState(false);
+    const [followers, setFollowers] = React.useState([]);
     const p = route.params.performer;
     console.log(p);
     const hash = sha256(p.email+currentUser.user_id).words[0];
@@ -29,11 +30,22 @@ const Performer = ({navigation,currentUser, route}) => {
             url:`${API}/performer_follow`,
             data:{user_id:currentUser.user_id,performer_id:p?.id}
         }).then((res) => {
-            if(res.data.responseCode){
-                setFollow(true);
-            }
+            setFollow(true);
             ToastAndroid.showWithGravity(res.data.responseText,ToastAndroid.CENTER, ToastAndroid.SHORT);
-            
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
+
+    const getFollowers = () => {
+        axios({
+            method:'POST',
+            url:`${API}/customer_follow_list`,
+            data:{performer_id:p.id}
+        }).then((res) => {
+            if(res.data.responseCode){
+                setFollowers(res.data.responseData);
+            }
         }).catch((err) => {
             console.log(err);
         })
@@ -160,6 +172,7 @@ const Performer = ({navigation,currentUser, route}) => {
         // onChildAdded(messageRef,(data) =>{
         //     console.log(data.val());
         // })
+        getFollowers();
         const db = getDatabase();
         try{
             const paidRef = ref(db,'paidcam/'+p?.id);
@@ -197,7 +210,7 @@ const Performer = ({navigation,currentUser, route}) => {
                 <View style={styles.contents}>
                     <View style={{flexDirection:'row', justifyContent:'space-between'}}>
                         <View style={{flexDirection:'column',justifyContent:'space-between'}}>
-                            <Text style={{color:'#fff', fontSize:18, fontWeight:'700', marginBottom:5}}>{p?.f_name} {p?.l_name}</Text>
+                            <Text style={{color:'#fff', fontSize:18, fontWeight:'700', marginBottom:5}}>{p?.f_name} {p?.l_name}   <Text style={{fontWeight:'300'}}>({followers.length} <Text style={{fontSize:12}}>Followers</Text>)</Text></Text>
                             <View style={{flexDirection:'row'}}>
                                 <View style={{flexDirection:'row', alignItems:'center', backgroundColor:'#FF00FF', paddingLeft:8,paddingRight:8, borderRadius:10}}>
                                     <Icon name="female" color={'#fff'} size={10} style={{marginRight:5}} />

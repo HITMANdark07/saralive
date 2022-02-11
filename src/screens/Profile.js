@@ -15,6 +15,7 @@ const Profile = ({navigation, currentUser, setUser}) => {
 
     console.log(currentUser);
     const [coins, setCoins] = React.useState(0.00);
+    const [followings, setFollowings] = React.useState([]);
     const init = () => {
         axios({
             method:'POST',
@@ -31,8 +32,22 @@ const Profile = ({navigation, currentUser, setUser}) => {
     const signOut = () => {
         setUser(null);
     }
+    const getFollowings = () => {
+        axios({
+            method:'POST',
+            url:`${API}/performer_follow_list`,
+            data:{customer_id:currentUser.user_id}
+        }).then((res) => {
+            if(res.data.responseCode){
+                setFollowings(res.data.responseData);
+            }
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
     React.useEffect(() => {
         init();
+        getFollowings();
     },[]);
     return (
         <View style={{flex:1, backgroundColor:dark}}>
@@ -52,7 +67,7 @@ const Profile = ({navigation, currentUser, setUser}) => {
               </View>
              )
            }
-                <Text style={{color:'#fff', fontWeight:'700', fontSize:22, marginTop:10}}>{currentUser.name}</Text>
+                <Text style={{color:'#fff', fontWeight:'700', fontSize:22, marginTop:10}}>{currentUser.name}     <Text style={{fontWeight:'300'}}>({followings.length} <Text style={{fontSize:12}}>Followings</Text>)</Text></Text>
                 <View style={{backgroundColor:currentUser.sex==='female' ? '#FF00FF':'#4169E1',justifyContent:'flex-start', width:30, borderRadius:50}}>
                     <Ico name={currentUser.sex ==='female' ? "female":"male"} size={20} color="#fff" style={{padding:5}} />
                 </View>
