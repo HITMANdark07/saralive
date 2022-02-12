@@ -21,6 +21,7 @@ LogBox.ignoreLogs(['Reanimated 2']);
 import { connect } from 'react-redux';
 import firebase from './src/firebase/config';
 import VideoCall from './src/screens/VideoCall';
+import UpdateProfile from './src/screens/UpdateProfile';
 
 // import {database } from 'firebase/'
 // import AddDoctor from './src/screens/AddDoctor';
@@ -44,6 +45,7 @@ function HomeDrawer() {
         <Drawer.Screen name="Me" component={Profile} options={{headerShown:false, unmountOnBlur:true}} />
         <Drawer.Screen name="Chat" component={ChatScreen} options={{headerShown:false, unmountOnBlur:true}} />
         <Drawer.Screen name="Performer" component={Performer} options={{headerShown:false, unmountOnBlur:true}} />
+        <Drawer.Screen name="UpdateProfile" component={UpdateProfile} options={{headerShown:false, unmountOnBlur:true}} />
     </Drawer.Navigator>
   );
 }
