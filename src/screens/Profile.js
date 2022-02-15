@@ -152,7 +152,9 @@ const Profile = ({navigation, currentUser, setUser}) => {
           </View>
         </View>
 
-        <TouchableOpacity activeOpacity={0.6}>
+        <TouchableOpacity activeOpacity={0.6} onPress={() => {
+          navigation.navigate('BuyCoins');
+        }}>
           <LinearGradient
             colors={['#A020F0', '#FF00FF']}
             style={styles.coins}

@@ -79,7 +79,7 @@ const Home = ({navigation, currentUser}) => {
             }
             >
             <View style={{flexDirection:'row', justifyContent:'center', marginBottom:100}}>
-                <View style={{flexDirection:'column', justifyContent:'flex-start'}}>
+                <View style={{flexDirection:'row', justifyContent:'flex-start', flexWrap:'wrap' }}>
                 {
                     performers.map((p,idx) => (
                         <TouchableOpacity activeOpacity={0.5} key={idx} onPress={() => { navigation.navigate('Performer', { performer:p })}}>

@@ -1,4 +1,6 @@
 rootProject.name = 'saralive'
+include ':react-native-razorpay'
+project(':react-native-razorpay').projectDir = new File(rootProject.projectDir,   '../node_modules/react-native-razorpay/android')
 include ':agora-react-native-rtm'
 project(':agora-react-native-rtm').projectDir = new File(rootProject.projectDir, '../node_modules/agora-react-native-rtm/android')
 include ':agora-react-native-rtm'

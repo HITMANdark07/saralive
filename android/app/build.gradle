@@ -204,6 +204,8 @@ dependencies {
     //noinspection GradleDynamicVersion
     implementation platform('com.google.firebase:firebase-bom:29.0.3')
 
+    implementation project(':react-native-razorpay')
+    
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
     implementation project(':react-native-agora')
