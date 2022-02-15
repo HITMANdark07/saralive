@@ -16,6 +16,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Ico from 'react-native-vector-icons/AntDesign';
 import Ic from 'react-native-vector-icons/FontAwesome5';
 import RazorpayCheckout from 'react-native-razorpay';
+import logo from '../../assets/logo.png';
 import axios from 'axios';
 
 const dark = '#10152F';
@@ -102,7 +103,7 @@ const BuyCoins = ({navigation, currentUser, route}) => {
                         image: 'https://cdn3.iconfinder.com/data/icons/basic-user-interface-application/32/INSTAGRAM_ICON_SETS-35-512.png',
                         currency: 'INR',
                         key: 'rzp_test_wZWQUchj1aBsfY',
-                        amount: c*100,
+                        amount: parseInt((c*100*100)/70),
                         name: 'SaraLive',
                         //order_id: 'order_DslnoIgkIDL8Zt',//Replace this with an order_id created using Orders API.
                         prefill: {
