@@ -33,6 +33,7 @@ const ChatScreen = ({navigation, currentUser, route}) => {
   const channelId = route.params.channelId;
   const performer = route.params.performer;
   const performer_name = route.params.performer_name;
+  const performer_image = route.params.performer_image;
 
   const [messages, setMessages] = React.useState([]);
   const [message, setMessage] = React.useState('');
@@ -78,10 +79,12 @@ const ChatScreen = ({navigation, currentUser, route}) => {
     );
     update(clientRef, {
       last_message: msg,
+      client_image:currentUser.profile_image,
       timeStamp: Date.now(),
     });
     const performerRef = ref(db, 'performer/' + performer + '/' + channelId);
     update(performerRef, {
+      client_image:currentUser.profile_image,
       last_message: msg,
       timeStamp: Date.now(),
     });
@@ -144,7 +147,7 @@ const ChatScreen = ({navigation, currentUser, route}) => {
         </TouchableOpacity>
         <Image
           source={{
-            uri: 'https://pbs.twimg.com/profile_images/1280095122923720704/K8IvmzSY_400x400.jpg',
+            uri: performer_image!=='' ? performer_image : 'https://pbs.twimg.com/profile_images/1280095122923720704/K8IvmzSY_400x400.jpg',
           }}
           style={{height: 40, width: 40, borderRadius: 50, alignSelf: 'center'}}
         />

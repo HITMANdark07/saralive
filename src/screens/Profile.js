@@ -10,6 +10,7 @@ import {
 import {connect} from 'react-redux';
 import {API} from '../../api.config';
 import LinearGradient from 'react-native-linear-gradient';
+import ImagePicker from 'react-native-image-crop-picker';
 import Icon from 'react-native-vector-icons/Entypo';
 import Ico from 'react-native-vector-icons/Ionicons';
 import Ic from 'react-native-vector-icons/FontAwesome5';
@@ -37,6 +38,50 @@ const Profile = ({navigation, currentUser, setUser}) => {
         console.log(err);
       });
   };
+  const getUser = () => {
+    axios({
+        method:'POST',
+        url:`${API}/customer_profile`,
+        data:{
+            customer_id:currentUser.user_id,
+        }
+    }).then((res) => {
+        if(res.data.responseCode){
+            setUser(res.data.responseData);
+        }
+    }).catch((err) => {
+        console.log(err);
+    })
+}
+  const  openGallery = () => {
+    ImagePicker.openPicker({mediaType:'photo', cropping:true, includeBase64:true}).then(res => {
+        // setUpImage(res);
+        // setImage(`data:image/jpeg;base64,${res.data}`);
+        // setShowUpload(true);
+        // console.log(res);
+        let formData = new FormData();
+        formData.append('customer_id', currentUser.user_id);
+        formData.append('image', {
+            uri: res.path,
+            name: `image.${res.mime.split("/")[1]}`,
+            type: res.mime
+        });
+        axios({
+            method:'POST',
+            url:`${API}/customer_profile_image_upload`,
+            data:formData
+        }).then((res) => {
+            if(res.data.responseCode){
+                getUser();
+                // setUser({...currentUser, images: res.data.responseData});
+            }
+        }).catch((err) => {
+            console.log(err);
+        })
+    }).catch(err => {
+        console.log(err);
+    })
+}
   const signOut = () => {
     setUser(null);
   };
@@ -68,9 +113,10 @@ const Profile = ({navigation, currentUser, setUser}) => {
         style={{flex: 1}}>
         <View style={{padding: 20, flexDirection: 'column'}}>
           {currentUser && currentUser.profile_image ? (
+            <>
             <Image
               source={{
-                uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyQbC0yxIUoik0WypTTIFH8Kf_D-Efpas8Hw&usqp=CAU',
+                uri: currentUser.profile_image!="" ? currentUser.profile_image :'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyQbC0yxIUoik0WypTTIFH8Kf_D-Efpas8Hw&usqp=CAU',
               }}
               style={{
                 width: 100,
@@ -80,6 +126,10 @@ const Profile = ({navigation, currentUser, setUser}) => {
                 borderWidth: 1,
               }}
             />
+            <TouchableOpacity style={{padding:10,borderRadius:50,marginLeft:90,borderColor:dark,borderWidth:2,marginTop:80, position:'absolute', backgroundColor:'#4BD5CF'}} onPress={openGallery}>
+                <Icon name="camera" size={22} color="#fff" />
+              </TouchableOpacity>
+            </>
           ) : (
             <View
               style={{
@@ -96,6 +146,9 @@ const Profile = ({navigation, currentUser, setUser}) => {
                 color="#fff"
                 style={{alignSelf: 'center'}}
               />
+              <TouchableOpacity style={{padding:10,borderRadius:50,marginLeft:90,borderColor:dark,borderWidth:2,marginTop:80, position:'absolute', backgroundColor:'#4BD5CF'}} onPress={openGallery}>
+                <Icon name="camera" size={22} color="#fff" />
+              </TouchableOpacity>
             </View>
           )}
           <View

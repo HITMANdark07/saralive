@@ -38,6 +38,21 @@ const OtpScreen = ({navigation, setUser, route}) => {
             console.log(err);
         })
     }
+    const getUser = (id) => {
+        axios({
+            method:'POST',
+            url:`${API}/customer_profile`,
+            data:{
+                customer_id:id,
+            }
+        }).then((res) => {
+            if(res.data.responseCode){
+                setUser(res.data.responseData);
+            }
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
     const verify = () => {
         setLoading(true);
         const formData = new FormData();
@@ -61,7 +76,7 @@ const OtpScreen = ({navigation, setUser, route}) => {
                     return ;
                 }
                 ToastAndroid.showWithGravity(res.data.responseText, ToastAndroid.CENTER, ToastAndroid.SHORT);
-                setUser(res.data.responseData);
+                getUser(res.data.responseData.user_id);
             }else{
                 ToastAndroid.showWithGravity(res.data.responseText, ToastAndroid.CENTER, ToastAndroid.SHORT);
                 console.log(res.data.responseText)

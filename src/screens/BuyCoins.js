@@ -116,7 +116,6 @@ const BuyCoins = ({navigation, currentUser, route}) => {
 
                       RazorpayCheckout.open(options).then((data) => {
                         // handle success
-                        console.log(data,c);
 
                         axios({
                             method:'POST',

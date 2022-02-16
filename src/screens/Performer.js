@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, TouchableOpacity, StyleSheet, Image, ToastAndroid } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, ToastAndroid, ScrollView, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Ico from 'react-native-vector-icons/Octicons';
 import Iconss from 'react-native-vector-icons/MaterialIcons';
@@ -20,8 +20,9 @@ const Performer = ({navigation,currentUser, route}) => {
     const [coins, setCoins] = React.useState(0);
     const [follow, setFollow] = React.useState(false);
     const [followers, setFollowers] = React.useState([]);
+    const wd = Dimensions.get('window').width;
     const p = route.params.performer;
-    console.log(p);
+
     const hash = sha256(p.email+currentUser.user_id).words[0];
     console.log(hash);
     const followher = () => {
@@ -71,7 +72,7 @@ const Performer = ({navigation,currentUser, route}) => {
         const onCamRef = query(ref(db, 'client/'+currentUser.user_id),orderByChild("channelId"), equalTo(hash));
         onValue(onCamRef,(snapshot) => {
             if(snapshot.exists()){
-                navigation.navigate('Chat',{channelId:hash, performer:p.id,performer_name:p.f_name+" "+p.l_name});
+                navigation.navigate('Chat',{channelId:hash, performer:p.id,performer_name:p.f_name+" "+p.l_name,performer_image:p.images.length>0 ? p.images[p.images.length-1].image: ""});
             }else{
                 createChatChannel();
             }
@@ -79,6 +80,7 @@ const Performer = ({navigation,currentUser, route}) => {
             onlyOnce:true
         })
     }
+    // console.log(p);
 
     function createChatChannel() {
     const db = getDatabase();
@@ -88,12 +90,14 @@ const Performer = ({navigation,currentUser, route}) => {
         client:currentUser.user_id,
         performer_name:p.f_name+" "+p.l_name,
         client_name:currentUser.name,
+        performer_image:p.images.length>0 ? p.images[p.images.length-1].image : '',
+        client_image:currentUser.profile_image,
         performer:p.id,
         last_message:'...',
         timeStamp: Date.now()
     }).then((res) => {
         console.log(res);
-        navigation.navigate('Chat',{channelId:hash, performer:p.id,performer_name:p.f_name+" "+p.l_name});
+        navigation.navigate('Chat',{channelId:hash, performer:p.id,performer_name:p.f_name+" "+p.l_name,performer_image:p.images.length>0 ? p.images[p.images.length-1].image: ""});
     }).catch((err) => {
         console.log("ERROR ", err);
     })
@@ -104,6 +108,8 @@ const Performer = ({navigation,currentUser, route}) => {
         client:currentUser.user_id,
         performer_name:p.f_name+" "+p.l_name,
         client_name:currentUser.name,
+        performer_image:p.images.length>0 ? p.images[p.images.length-1].image : '',
+        client_image:currentUser.profile_image,
         performer:p.id,
         last_message:'...',
         timeStamp: Date.now()
@@ -201,7 +207,23 @@ const Performer = ({navigation,currentUser, route}) => {
         <View style={{flex:1, backgroundColor:dark, justifyContent:'space-between'}}>
             <View style={styles.container}>
                 <View style={{flex:1}}>
-                    <Image source={{uri: !p && p?.images?.length>0 ? p?.images[0].image : "https://pbs.twimg.com/profile_images/1280095122923720704/K8IvmzSY_400x400.jpg"}} style={{flex:1}} />
+                    
+                    {p.images.length>0 ?
+                    
+                    (<ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                        <View style={{display:'flex', flexDirection:'row', overflow:'scroll'}}>
+                        {
+                        p.images.map((perf) => (
+                            <Image source={{uri: perf.image}} style={{height:'100%',width:wd,}} />
+                        ))
+                    }
+                        </View>
+                    </ScrollView>)
+                    :
+                    (<Image source={{uri: "https://pbs.twimg.com/profile_images/1280095122923720704/K8IvmzSY_400x400.jpg"}} style={{flex:1}} />)}
+
+
+                    
                     <TouchableOpacity style={styles.f_button} activeOpacity={0.6} onPress={followher}>
                         <SimpleIcons name="user-follow" color={!follow ? "purple": "#fff"} size={20} />
                         <Text style={{color:!follow ? "purple": "#fff", fontWeight:'400'}}>{follow ? "FOLLOWED":"FOLLOW"}</Text>

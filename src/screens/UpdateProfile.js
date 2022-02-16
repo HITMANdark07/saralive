@@ -7,24 +7,25 @@ import {
   ScrollView,
   Image,
   TextInput,
-  ActivityIndicator
+  ActivityIndicator,
+  ToastAndroid
 } from 'react-native';
 import {connect} from 'react-redux';
 import InputText from '../components/InputText';
 import Ico from 'react-native-vector-icons/Ionicons';
-
+import { setCurrentUser } from '../redux/user/user.action';
 import {API} from '../../api.config';
 import Ic from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 
 const dark = '#10152F';
 const theme1 = "#E5E5E5";
-const ChatScreen = ({navigation, currentUser}) => {
+const ChatScreen = ({navigation, currentUser, setUser}) => {
 
 const [firstName, setFirstName] = React.useState(currentUser.name);
 const [lastName, setLastName] = React.useState("");
 const [email , setEmail] = React.useState(currentUser.email);
-const [phone, setPhone] = React.useState(currentUser.telephone);
+const [phone, setPhone] = React.useState(currentUser.phone);
 const [show, setShow] = React.useState(false);
 const [loading, setLoading] = React.useState(false);
   const scrollRef = useRef();
@@ -69,7 +70,10 @@ const [loading, setLoading] = React.useState(false);
                 telephone:phone
             }
         }).then((res) => {
-            console.log(res.data);
+            if(res.data.responseCode){
+              ToastAndroid.showWithGravity(res.data.responseText,ToastAndroid.CENTER,ToastAndroid.SHORT);
+              setUser(res.data.responseData);
+            }
         }).catch((err) => {
             console.log(err);
         })
@@ -182,5 +186,8 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => ({
   currentUser: state.user.currentUser,
 });
+const mapDispatchToProps = dispatch => ({
+  setUser: user => dispatch(setCurrentUser(user))
+})
 
-export default connect(mapStateToProps)(ChatScreen);
+export default connect(mapStateToProps,mapDispatchToProps)(ChatScreen);
