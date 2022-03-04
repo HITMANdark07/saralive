@@ -23,6 +23,7 @@ import firebase from './src/firebase/config';
 import VideoCall from './src/screens/VideoCall';
 import UpdateProfile from './src/screens/UpdateProfile';
 import BuyCoins from './src/screens/BuyCoins';
+import FollowingList from './src/screens/FollowingList';
 
 // import {database } from 'firebase/'
 // import AddDoctor from './src/screens/AddDoctor';
@@ -48,6 +49,7 @@ function HomeDrawer() {
         <Drawer.Screen name="Performer" component={Performer} options={{headerShown:false, unmountOnBlur:true}} />
         <Drawer.Screen name="UpdateProfile" component={UpdateProfile} options={{headerShown:false, unmountOnBlur:true}} />
         <Drawer.Screen name="BuyCoins" component={BuyCoins} options={{headerShown:false, unmountOnBlur:true}} />
+        <Drawer.Screen name="Followings" component={FollowingList} options={{headerShown:false, unmountOnBlur:true}} />
     </Drawer.Navigator>
   );
 }

@@ -9,7 +9,6 @@ import { connect } from 'react-redux';
 import { setCurrentUser } from '../redux/user/user.action'
 import { API } from '../../api.config';
 
-
 const theme1 = "#E5E5E5";
 const OtpScreen = ({navigation, setUser, route}) => {
     const phone = route.params.phone;
@@ -117,9 +116,13 @@ const OtpScreen = ({navigation, setUser, route}) => {
                     )
                     :
                     (
-                        <TouchableOpacity style={styles.button} onPress={verify} >
+                        <TouchableOpacity onPress={verify} >
+                            <LinearGradient  colors={['#FEDB37', '#FDB931', '#9f7928', '#8A6E2F']} style={styles.button} >
+                            <>
                             <Ico name="verified" size={30} color='#fff' style={{marginRight:20}} />
                             <Text style={{fontSize:22, fontWeight:'400', color:'#fff'}}>Verify</Text>
+                            </>
+                            </LinearGradient>
                         </TouchableOpacity>
                     )
                 }

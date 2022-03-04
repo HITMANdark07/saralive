@@ -75,9 +75,13 @@ const Login = ({navigation, setUser}) => {
                     )
                     :
                     ( */}
-                        <TouchableOpacity style={styles.button} onPress={login}>
-                            <Ico name="login" size={30} color='#fff' style={{marginRight:20}} />
-                            <Text style={{fontSize:22, fontWeight:'400', color:'#fff'}}>Send OTP</Text>
+                        <TouchableOpacity  onPress={login}>
+                            <LinearGradient colors={['#FEDB37', '#FDB931', '#9f7928', '#8A6E2F']} style={styles.button}>
+                                <>
+                                <Ico name="login" size={30} color='#fff' style={{marginRight:20}} />
+                                <Text style={{fontSize:22, fontWeight:'400', color:'#fff'}}>Send OTP</Text>
+                                </>
+                            </LinearGradient>
                         </TouchableOpacity>
                     {/* )
                 } */}

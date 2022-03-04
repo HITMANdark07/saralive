@@ -165,10 +165,14 @@ const Profile = ({navigation, currentUser, setUser}) => {
                 marginTop: 10,
               }}>
               {currentUser.name}{' '}
-              <Text style={{fontWeight: '300'}}>
+              <TouchableOpacity activeOpacity={0.5} onPress={() => {
+                navigation.navigate('Followings',{followings});
+              }}>
+              <Text style={{fontWeight: '300', color:'#fff'}}>
                 ({followings.length}{' '}
                 <Text style={{fontSize: 12}}>Followings</Text>)
               </Text>
+              </TouchableOpacity>
             </Text>
             <TouchableOpacity
               onPress={() => {

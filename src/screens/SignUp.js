@@ -96,9 +96,13 @@ const SignUp = ({navigation, setUser}) => {
                     )
                     :
                     (
-                        <TouchableOpacity style={styles.button} onPress={register} >
-                            <Ico name="person-add-alt-1" size={30} color='#fff' style={{marginRight:20}} />
-                            <Text style={{fontSize:22, fontWeight:'400', color:'#fff'}}>SIGNUP</Text>
+                        <TouchableOpacity onPress={register} >
+                            <LinearGradient colors={['#FEDB37', '#FDB931', '#9f7928', '#8A6E2F']} style={styles.button}>
+                                <>
+                                <Ico name="person-add-alt-1" size={30} color='#fff' style={{marginRight:20}} />
+                                <Text style={{fontSize:22, fontWeight:'400', color:'#fff'}}>SIGNUP</Text>
+                                </>
+                            </LinearGradient>
                         </TouchableOpacity>
                     )
                 }
