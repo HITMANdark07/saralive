@@ -3,6 +3,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { getDatabase, push, ref, set, orderByChild,remove, equalTo,onChildAdded, query, orderByValue, onValue, update } from "firebase/database";
 import CustomDrawer from './src/components/Drawer';
 // import Home from './src/screens/Home';
 // import Profile from './src/screens/Profile';
@@ -24,6 +25,7 @@ import VideoCall from './src/screens/VideoCall';
 import UpdateProfile from './src/screens/UpdateProfile';
 import BuyCoins from './src/screens/BuyCoins';
 import FollowingList from './src/screens/FollowingList';
+import { setNotification } from './src/redux/user/user.action';
 
 // import {database } from 'firebase/'
 // import AddDoctor from './src/screens/AddDoctor';
@@ -38,6 +40,7 @@ const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
 function HomeDrawer() {
+
   return (
     <Drawer.Navigator screenOptions={{drawerStyle:{backgroundColor:'transparent'}}} drawerContent={(props) => <CustomDrawer {...props}  /> }>
         <Drawer.Screen name="Home" component={Home} options={{headerShown:false, unmountOnBlur:true}} />
@@ -62,8 +65,17 @@ function HomeDrawer() {
 //     )
 // }
 
-const Router = ({currentUser}) => {
+const Router = ({currentUser,setNoti}) => {
 
+  React.useEffect(() => {
+    if(currentUser){
+    const db = getDatabase();
+    const mRef = query(ref(db, 'messages'),orderByChild("receiver"), equalTo(currentUser?.user_id));
+    return onValue(mRef,(snapshot) => {
+        setNoti(true);
+    })
+    }
+},[]);
     return (
         <NavigationContainer>
             <Stack.Navigator>
@@ -87,4 +99,7 @@ const Router = ({currentUser}) => {
 const mapStateToProps = (state) => ({
   currentUser : state.user.currentUser
 })
-export default connect(mapStateToProps)(Router);
+const mapDispatchToProps = (dispatch) => ({
+  setNoti : data => dispatch(setNotification(data))
+})
+export default connect(mapStateToProps,mapDispatchToProps)(Router);

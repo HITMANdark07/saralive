@@ -21,7 +21,7 @@ const UserCard = ({performer}) => {
         <TouchableOpacity activeOpacity={0.4}>
               <View style={{display:'flex',flexDirection:'row', margin:10, flex:1, backgroundColor:'#1A224B', padding:10, borderRadius:20}}>
                 <Image
-                    source={{uri: 'https://pbs.twimg.com/profile_images/1280095122923720704/K8IvmzSY_400x400.jpg'}}
+                    source={{uri: performer.image ? performer.image : 'https://pbs.twimg.com/profile_images/1280095122923720704/K8IvmzSY_400x400.jpg'}}
                     style={{height: 60, width: 60, borderRadius: 50, alignSelf: 'center'}}
                 />
                 <View style={{flex:1, justifyContent:'center', flexDirection:'column'}}>

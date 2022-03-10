@@ -61,16 +61,12 @@ function CustomDrawer({navigation,currentUser,setUser}) {
       </View>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('OnCam')} >
-          {/* {currentUser && currentUser.photo ? (<Image source={{uri:currentUser.photo}} style={styles.photo} />) :
-          (<Icon name="user-circle-o" style={styles.icon} color={themeColor1} size={30} />)}
-          <Text style={styles.menuText}>Hi, {currentUser && currentUser.name ? currentUser.name.split(" ")[0] : "USER"}</Text> */}
+      {/* <TouchableOpacity onPress={() => navigation.navigate('OnCam')} >
           <View style={styles.drawerMenu} >
           <Icon name="picasa" style={styles.icon} color={themeColor2} size={30} />
           <Text style={styles.menuText}>On Cams</Text>
       </View>
-
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       
       <TouchableOpacity onPress={() => navigation.navigate('Messages')}>
       <View style={styles.drawerMenu}>

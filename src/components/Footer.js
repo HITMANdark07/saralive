@@ -1,8 +1,9 @@
 import React from 'react'
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import Icon from 'react-native-vector-icons/Entypo';
+import { connect } from 'react-redux';
 
-const Footer = ({navigation,name }) => {
+const Footer = ({navigation,name,notification }) => {
     return (
         <View style={styles.footmain}>
             <View style={styles.footer}>
@@ -14,17 +15,20 @@ const Footer = ({navigation,name }) => {
                 <Text style={{color:name==='discover' ? "#4BD5CF":'#fff', fontSize:12}}>Discover</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.tab} onPress={() => {
+                {/* <TouchableOpacity style={styles.tab} onPress={() => {
                     navigation.navigate('OnCam');
                 }}>
                 <Icon name="picasa" size={25} color={name==='oncam' ? "#4BD5CF":'#ddd'}/>
                 <Text style={{color:name==='oncam' ? "#4BD5CF":'#fff', fontSize:12}}>OnCam</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
 
                 <TouchableOpacity style={styles.tab} onPress={() => {
                     navigation.navigate('Messages');
                 }}>
                 <Icon name="message" size={25} color={name==='messages' ? "#4BD5CF":'#ddd'}/>
+                {notification && <Icon name="dot-single" size={45}
+                style={{position:'absolute', right:-8, top:-15}}
+                color="#ff0000" />}
                 <Text style={{color:name==='messages' ? "#4BD5CF":'#fff', fontSize:12}}>Messages</Text>
                 </TouchableOpacity>
 
@@ -70,4 +74,7 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Footer;
+const mapStateToProps = (state) => ({
+    notification: state.user.notification
+})
+export default connect(mapStateToProps)(Footer);
