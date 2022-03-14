@@ -1630,6 +1630,11 @@
   "resolved" "https://registry.npmjs.org/@react-native-community/eslint-plugin/-/eslint-plugin-1.1.0.tgz"
   "version" "1.1.0"
 
+"@react-native-google-signin/google-signin@^7.2.1":
+  "integrity" "sha512-DZxITp7c77Mtirwzr74up6LSHPP4baGHEN4x8yknpgEUQwDx/6edchhtwVQqW9Uw06+l8Ge/gsUeDZ0TYIm01w=="
+  "resolved" "https://registry.npmjs.org/@react-native-google-signin/google-signin/-/google-signin-7.2.1.tgz"
+  "version" "7.2.1"
+
 "@react-native-picker/picker@^2.2.1":
   "integrity" "sha512-EC7yv22QLHlTfnbC1ez9IUdXTOh1W31x96Oir0PfskSGFFJMWWdLTg4VrcE2DsGLzbfjjkBk123c173vf2a5MQ=="
   "resolved" "https://registry.npmjs.org/@react-native-picker/picker/-/picker-2.2.1.tgz"

@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   ImageBackground,
+  Linking,
 } from 'react-native';
 import {connect} from 'react-redux';
 import {API} from '../../api.config';
@@ -16,6 +17,7 @@ import Ico from 'react-native-vector-icons/Ionicons';
 import Ic from 'react-native-vector-icons/FontAwesome5';
 import Footer from '../components/Footer';
 import {setCurrentUser} from '../redux/user/user.action';
+
 import axios from 'axios';
 
 const dark = '#10152F';
@@ -259,7 +261,7 @@ const Profile = ({navigation, currentUser, setUser}) => {
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity activeOpacity={0.4}>
+          <TouchableOpacity activeOpacity={0.4} onPress={() => Linking.openURL('https://sites.google.com/view/poplyaboutus/home')}>
             <View
               style={{
                 flexDirection: 'row',
@@ -267,9 +269,51 @@ const Profile = ({navigation, currentUser, setUser}) => {
                 margin: 10,
               }}>
               <Text style={{color: '#ddd', fontSize: 20, fontWeight: '700'}}>
-                Account Info
+                About
               </Text>
               <Icon name="info-with-circle" color="#ddd" size={25} />
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity activeOpacity={0.4} onPress={() => Linking.openURL('https://sites.google.com/view/usergu/home')}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                margin: 10,
+              }}>
+              <Text style={{color: '#ddd', fontSize: 20, fontWeight: '700'}}>
+                User Guidlines
+              </Text>
+              <Icon name="sound" color="#ddd" size={25} />
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity activeOpacity={0.4} onPress={() => Linking.openURL('https://sites.google.com/view/poplyprivacypolicy/home ')}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                margin: 10,
+              }}>
+              <Text style={{color: '#ddd', fontSize: 20, fontWeight: '700'}}>
+                Privacy Policy
+              </Text>
+              <Icon name="fingerprint" color="#ddd" size={25} />
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity activeOpacity={0.4} onPress={() => Linking.openURL('https://sites.google.com/view/termsand/home')}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                margin: 10,
+              }}>
+              <Text style={{color: '#ddd', fontSize: 20, fontWeight: '700'}}>
+                Terms & Condition
+              </Text>
+              <Icon name="layers" color="#ddd" size={25} />
             </View>
           </TouchableOpacity>
 
