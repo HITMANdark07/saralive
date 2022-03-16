@@ -73,6 +73,8 @@ const [loading, setLoading] = React.useState(false);
             if(res.data.responseCode){
               ToastAndroid.showWithGravity(res.data.responseText,ToastAndroid.CENTER,ToastAndroid.SHORT);
               setUser(res.data.responseData);
+            }else{
+              ToastAndroid.showWithGravity(res.data.responseText,ToastAndroid.CENTER,ToastAndroid.SHORT);
             }
         }).catch((err) => {
             console.log(err);

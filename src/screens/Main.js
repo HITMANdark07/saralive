@@ -6,8 +6,40 @@ import Ico from 'react-native-vector-icons/AntDesign';
 import {
     GoogleSignin,
   } from '@react-native-google-signin/google-signin';
+import axios from 'axios';
+import {LoginManager, AccessToken,GraphRequest, GraphRequestManager} from 'react-native-fbsdk-next';
+import { setCurrentUser } from '../redux/user/user.action';
+import { API } from '../../api.config';
+import { connect } from 'react-redux';
+const Main = ({navigation,setUser}) => {
 
-const Main = ({navigation}) => {
+    const signInApp = (email) => {
+        axios({
+            method:'POST',
+            url:`${API}/customer_social_login`,
+            data:{email:email}
+        }).then((response) => {
+            if(response.data.responseCode){
+                setUser(response.data.responseData);
+            }else{
+                ToastAndroid.showWithGravity("Authentication Failed",ToastAndroid.CENTER, ToastAndroid.LONG);
+            }
+        })
+    }
+    const GetInfoUSer = () => {
+        return new Promise((resolve, reject) => {
+            const infoRequest = new GraphRequest('/me', null, ((error, result) => {
+                if (error) {
+                    reject(error)
+                } else {
+                   resolve(result)
+                }
+            }))
+        
+            new GraphRequestManager().addRequest(infoRequest).start();
+        
+          })
+    }
     const signIn = () => {
         GoogleSignin.configure({
             androidClientId: '291449817191-8h1gnefrl5jtm219h6ul2bn40hh486vs.apps.googleusercontent.com',
@@ -17,14 +49,40 @@ const Main = ({navigation}) => {
                 if (hasPlayService) {
                     GoogleSignin.signIn().then((userInfo) => {
                             const {email , name, photo} = userInfo.user;
-                            console.log(email,name,photo);  
-                            ToastAndroid.showWithGravity("Hi "+email,ToastAndroid.CENTER,ToastAndroid.LONG); 
+                            signInApp(email);  
+                            console.log(email);
+                            ToastAndroid.showWithGravity("Hi "+name,ToastAndroid.CENTER,ToastAndroid.LONG); 
                     })
                 }
         }).catch((e) => {
             console.log("ERROR IS : " + JSON.stringify(e));
         })
     }
+    
+    const login = () => {
+        LoginManager.logInWithPermissions(['email','public_profile']).then(result => {
+            if (result.isCancelled) {
+                console.log(':(')
+            } else {
+                AccessToken.getCurrentAccessToken().then((data) => {
+                    let myAccessToken = data.accessToken.toString();
+                    GetInfoUSer().then(response => {
+                        if(response.email){
+                            signInApp(response.email);
+                        }else{
+                            ToastAndroid.showWithGravity("Email is not Associated with your Account",ToastAndroid.CENTER, ToastAndroid.LONG);
+                        }
+                    }).catch(error => {
+                        console.log(error)
+                    })
+                }
+                ).catch(error => {
+                    console.log(':(')
+                })
+            }
+        })
+    }
+
     return (
         <View style={{flex:1}}>
             <ImageBackground source={require("../../assets/images/back.jpg")} resizeMode="cover" style={{flex:1, justifyContent:'flex-end'}}>
@@ -49,7 +107,7 @@ const Main = ({navigation}) => {
                     </LinearGradient>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.social} activeOpacity={0.4}>
+                <TouchableOpacity style={styles.social} activeOpacity={0.4} onPress={login}>
                     <Image source={require("../../assets/images/fb.png")} style={{width:50, height:50}} />
                     <Text style={{fontSize:16, fontWeight:'600', color:'#000'}}>Signin with Facebook</Text>
                 </TouchableOpacity>
@@ -115,5 +173,7 @@ const styles = StyleSheet.create({
         elevation: 5,
     }
 })
-
-export default Main
+const mapDispatchToProps = (dispatch) => ({
+    setUser : user =>  dispatch(setCurrentUser(user))
+})
+export default connect(null, mapDispatchToProps)(Main)

@@ -17,7 +17,9 @@ import Ico from 'react-native-vector-icons/Ionicons';
 import Ic from 'react-native-vector-icons/FontAwesome5';
 import Footer from '../components/Footer';
 import {setCurrentUser} from '../redux/user/user.action';
-
+import {
+  GoogleSignin,
+} from '@react-native-google-signin/google-signin';
 import axios from 'axios';
 
 const dark = '#10152F';
@@ -84,9 +86,21 @@ const Profile = ({navigation, currentUser, setUser}) => {
         console.log(err);
     })
 }
-  const signOut = () => {
-    setUser(null);
-  };
+
+  const signOut = async() => {
+    GoogleSignin.configure({
+      androidClientId: '291449817191-8h1gnefrl5jtm219h6ul2bn40hh486vs.apps.googleusercontent.com',
+      webClientId:'291449817191-io9obsmhs6suv8eadlrjj6jujefqjcqh.apps.googleusercontent.com'
+      });
+    try {
+          await GoogleSignin.isSignedIn();
+          await GoogleSignin.signOut();
+          setUser(null);
+       // Remember to remove the user from your app's state as well
+      } catch (error) {
+        console.error(error);
+      }
+}
   const getFollowings = () => {
     axios({
       method: 'POST',
