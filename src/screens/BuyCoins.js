@@ -99,12 +99,12 @@ const BuyCoins = ({navigation, currentUser, route}) => {
             coinsData.map((c,i)=>(
                 <TouchableOpacity key={i} onPress={() => {
                     var options = {
-                        description: 'SaralLive Payments',
+                        description: 'Poply Payments',
                         image: 'https://cdn3.iconfinder.com/data/icons/basic-user-interface-application/32/INSTAGRAM_ICON_SETS-35-512.png',
                         currency: 'INR',
                         key: 'rzp_test_wZWQUchj1aBsfY',
                         amount: parseInt((c*100*100)/70),
-                        name: 'SaraLive',
+                        name: 'Poply',
                         //order_id: 'order_DslnoIgkIDL8Zt',//Replace this with an order_id created using Orders API.
                         prefill: {
                           email: currentUser.email,

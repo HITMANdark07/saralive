@@ -67,6 +67,7 @@ const Main = ({navigation,setUser}) => {
                 AccessToken.getCurrentAccessToken().then((data) => {
                     let myAccessToken = data.accessToken.toString();
                     GetInfoUSer().then(response => {
+                        console.log(response);
                         if(response.email){
                             signInApp(response.email);
                         }else{

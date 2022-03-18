@@ -26,7 +26,7 @@ import UpdateProfile from './src/screens/UpdateProfile';
 import BuyCoins from './src/screens/BuyCoins';
 import FollowingList from './src/screens/FollowingList';
 import { setNotification } from './src/redux/user/user.action';
-
+import PushNotification from 'react-native-push-notification';
 // import {database } from 'firebase/'
 // import AddDoctor from './src/screens/AddDoctor';
 // import ManageDoctor from './src/screens/ManageDoctor';
@@ -67,15 +67,32 @@ function HomeDrawer() {
 
 const Router = ({currentUser,setNoti}) => {
 
+  PushNotification.createChannel(
+    {
+      channelId: "channelpoply", // (required)
+      channelName: "My channel", // (required)
+      vibrate: true, // (optional) default: true. Creates the default vibration pattern if true.
+    },
+    (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
+  );
   React.useEffect(() => {
     if(currentUser){
     const db = getDatabase();
     const mRef = query(ref(db, 'messages'),orderByChild("receiver"), equalTo(currentUser?.user_id));
     return onValue(mRef,(snapshot) => {
         setNoti(true);
+        console.log(Object.keys(snapshot.val()));
+        let last = Object.keys(snapshot.val())[(Object.keys(snapshot.val())).length-1];
+        let msg = (snapshot.val())[last].message;
+        PushNotification.localNotification({
+          channelId:'channelpoply',
+          message:msg,
+          title:'New Message'
+        })
     })
     }
 },[]);
+  
     return (
         <NavigationContainer>
             <Stack.Navigator>
