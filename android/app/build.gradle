@@ -163,6 +163,14 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            if (project.hasProperty('poply.keystore')) {
+                storeFile file('poply.keystore')
+                storePassword 'android'
+                keyAlias 'poply'
+                keyPassword 'android'
+            }
+        }
     }
     buildTypes {
         debug {
