@@ -26,6 +26,7 @@ import {API} from '../../api.config';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Ico from 'react-native-vector-icons/AntDesign';
 import Ic from 'react-native-vector-icons/FontAwesome';
+import axios from 'axios';
 
 const dark = '#10152F';
 
@@ -55,6 +56,22 @@ const ChatScreen = ({navigation, currentUser, route}) => {
     });
     return messagesRef;
   };
+  
+  const deductCoin = () => {
+    axios({
+      method:'POST',
+      url:`${API}/customer_coin_deduct`,
+      data:{
+        customer_id:currentUser.user_id,
+        performer_id:performer,
+        coin:1
+      }
+    }).then(({data}) => {
+      console.log(data);
+    }).catch((err) => {
+      console.log(err);
+    })
+  }
 
   const sendMessage = msg => {
     const db = getDatabase();
@@ -69,6 +86,7 @@ const ChatScreen = ({navigation, currentUser, route}) => {
     })
       .then(res => {
         console.log(res);
+        deductCoin();
       })
       .catch(err => {
         console.log('ERROR ', err);
