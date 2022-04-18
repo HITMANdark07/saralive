@@ -1,4 +1,4 @@
-package com.poply;
+package com.saralive.poply;
 
 import android.os.Bundle;
 import com.facebook.react.ReactActivity;
@@ -12,7 +12,7 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "poply";
+    return "saralive";
   }
   @Override
   protected void onCreate(Bundle savedInstanceState) {
