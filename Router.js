@@ -27,6 +27,7 @@ import BuyCoins from './src/screens/BuyCoins';
 import FollowingList from './src/screens/FollowingList';
 import { setNotification } from './src/redux/user/user.action';
 import PushNotification from 'react-native-push-notification';
+import SplashScreen from  "react-native-splash-screen";
 // import {database } from 'firebase/'
 // import AddDoctor from './src/screens/AddDoctor';
 // import ManageDoctor from './src/screens/ManageDoctor';
@@ -76,6 +77,7 @@ const Router = ({currentUser,setNoti}) => {
     (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
   );
   React.useEffect(() => {
+    SplashScreen.hide();
     if(currentUser){
     const db = getDatabase();
     const mRef = query(ref(db, 'messages'),orderByChild("receiver"), equalTo(currentUser?.user_id));

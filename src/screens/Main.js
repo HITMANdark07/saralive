@@ -42,8 +42,8 @@ const Main = ({navigation,setUser}) => {
     }
     const signIn = () => {
         GoogleSignin.configure({
-            androidClientId: '291449817191-8h1gnefrl5jtm219h6ul2bn40hh486vs.apps.googleusercontent.com',
-            webClientId:'291449817191-io9obsmhs6suv8eadlrjj6jujefqjcqh.apps.googleusercontent.com'
+            androidClientId: '493275307288-h18fh5aoi5qeka4gcnsucid27n0vneu2.apps.googleusercontent.com',
+            webClientId:'493275307288-9r74pgg13u1tuattj96n3vjra6nj89nb.apps.googleusercontent.com'
             });
         GoogleSignin.hasPlayServices().then((hasPlayService) => {
                 if (hasPlayService) {
