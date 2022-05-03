@@ -275,7 +275,7 @@ const Profile = ({navigation, currentUser, setUser}) => {
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity activeOpacity={0.4} onPress={() => Linking.openURL('https://sites.google.com/view/poplyaboutus/home')}>
+          <TouchableOpacity activeOpacity={0.4} onPress={() => navigation.navigate('About')}>
             <View
               style={{
                 flexDirection: 'row',
@@ -289,7 +289,7 @@ const Profile = ({navigation, currentUser, setUser}) => {
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity activeOpacity={0.4} onPress={() => Linking.openURL('https://sites.google.com/view/usergu/home')}>
+          <TouchableOpacity activeOpacity={0.4} onPress={() => navigation.navigate('UserGuide')}>
             <View
               style={{
                 flexDirection: 'row',
@@ -303,7 +303,7 @@ const Profile = ({navigation, currentUser, setUser}) => {
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity activeOpacity={0.4} onPress={() => Linking.openURL('https://sites.google.com/view/poplyprivacypolicy/home ')}>
+          <TouchableOpacity activeOpacity={0.4} onPress={() => navigation.navigate('Privacy')}>
             <View
               style={{
                 flexDirection: 'row',
@@ -317,7 +317,7 @@ const Profile = ({navigation, currentUser, setUser}) => {
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity activeOpacity={0.4} onPress={() => Linking.openURL('https://sites.google.com/view/termsand/home')}>
+          <TouchableOpacity activeOpacity={0.4} onPress={() => navigation.navigate('Terms')}>
             <View
               style={{
                 flexDirection: 'row',

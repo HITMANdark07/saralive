@@ -28,6 +28,10 @@ import FollowingList from './src/screens/FollowingList';
 import { setNotification } from './src/redux/user/user.action';
 import PushNotification from 'react-native-push-notification';
 import SplashScreen from  "react-native-splash-screen";
+import PrivacyPolicy from './src/screens/PrivacyPolicy';
+import TermsAndCondition from './src/screens/TermsAndCondition';
+import UserGuides from './src/screens/UserGuides';
+import AboutUs from './src/screens/About';
 // import {database } from 'firebase/'
 // import AddDoctor from './src/screens/AddDoctor';
 // import ManageDoctor from './src/screens/ManageDoctor';
@@ -54,6 +58,10 @@ function HomeDrawer() {
         <Drawer.Screen name="UpdateProfile" component={UpdateProfile} options={{headerShown:false, unmountOnBlur:true}} />
         <Drawer.Screen name="BuyCoins" component={BuyCoins} options={{headerShown:false, unmountOnBlur:true}} />
         <Drawer.Screen name="Followings" component={FollowingList} options={{headerShown:false, unmountOnBlur:true}} />
+        <Drawer.Screen name="Privacy" component={PrivacyPolicy} options={{headerShown:false, unmountOnBlur:true}} />
+        <Drawer.Screen name="Terms" component={TermsAndCondition} options={{headerShown:false, unmountOnBlur:true}} />
+        <Drawer.Screen name="UserGuide" component={UserGuides} options={{headerShown:false, unmountOnBlur:true}} />
+        <Drawer.Screen name="About" component={AboutUs} options={{headerShown:false, unmountOnBlur:true}} />
     </Drawer.Navigator>
   );
 }
