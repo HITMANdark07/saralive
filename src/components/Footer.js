@@ -15,12 +15,12 @@ const Footer = ({navigation,name,notification }) => {
                 <Text style={{color:name==='discover' ? "#4BD5CF":'#fff', fontSize:12}}>Discover</Text>
                 </TouchableOpacity>
 
-                {/* <TouchableOpacity style={styles.tab} onPress={() => {
+                <TouchableOpacity style={styles.tab} onPress={() => {
                     navigation.navigate('OnCam');
                 }}>
                 <Icon name="picasa" size={25} color={name==='oncam' ? "#4BD5CF":'#ddd'}/>
                 <Text style={{color:name==='oncam' ? "#4BD5CF":'#fff', fontSize:12}}>OnCam</Text>
-                </TouchableOpacity> */}
+                </TouchableOpacity>
 
                 <TouchableOpacity style={styles.tab} onPress={() => {
                     navigation.navigate('Messages');

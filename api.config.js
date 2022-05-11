@@ -1,1 +1,1 @@
-export const API = "https://bengalmarine.in/chat_app/api/v1";
+export const API = "https://poply.live/poply_beta/api/v1";

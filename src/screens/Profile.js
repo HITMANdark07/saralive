@@ -261,19 +261,7 @@ const Profile = ({navigation, currentUser, setUser}) => {
         </TouchableOpacity>
 
         <View style={{flexDirection: 'column', padding: 20}}>
-          <TouchableOpacity activeOpacity={0.4}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                margin: 10,
-              }}>
-              <Text style={{color: '#ddd', fontSize: 20, fontWeight: '700'}}>
-                Payment History
-              </Text>
-              <Ic name="history" color="#ddd" size={25} />
-            </View>
-          </TouchableOpacity>
+          
 
           <TouchableOpacity activeOpacity={0.4} onPress={() => navigation.navigate('About')}>
             <View
@@ -328,6 +316,19 @@ const Profile = ({navigation, currentUser, setUser}) => {
                 Terms & Condition
               </Text>
               <Icon name="layers" color="#ddd" size={25} />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.4} onPress={() => navigation.navigate('Refund')}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                margin: 10,
+              }}>
+              <Text style={{color: '#ddd', fontSize: 20, fontWeight: '700'}}>
+                Refund Policy
+              </Text>
+              <Icon name="info-with-circle" color="#ddd" size={25} />
             </View>
           </TouchableOpacity>
 

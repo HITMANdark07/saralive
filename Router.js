@@ -32,6 +32,7 @@ import PrivacyPolicy from './src/screens/PrivacyPolicy';
 import TermsAndCondition from './src/screens/TermsAndCondition';
 import UserGuides from './src/screens/UserGuides';
 import AboutUs from './src/screens/About';
+import RefundPolicy from './src/screens/RefundPolicy';
 // import {database } from 'firebase/'
 // import AddDoctor from './src/screens/AddDoctor';
 // import ManageDoctor from './src/screens/ManageDoctor';
@@ -62,6 +63,7 @@ function HomeDrawer() {
         <Drawer.Screen name="Terms" component={TermsAndCondition} options={{headerShown:false, unmountOnBlur:true}} />
         <Drawer.Screen name="UserGuide" component={UserGuides} options={{headerShown:false, unmountOnBlur:true}} />
         <Drawer.Screen name="About" component={AboutUs} options={{headerShown:false, unmountOnBlur:true}} />
+        <Drawer.Screen name="Refund" component={RefundPolicy} options={{headerShown:false, unmountOnBlur:true}} />
     </Drawer.Navigator>
   );
 }
