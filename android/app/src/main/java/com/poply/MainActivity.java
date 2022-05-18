@@ -1,4 +1,4 @@
-package com.saralive.poply;
+package com.poply.user;
 
 import android.os.Bundle;
 import com.facebook.react.ReactActivity;

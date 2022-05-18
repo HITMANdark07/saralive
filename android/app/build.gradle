@@ -141,12 +141,12 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        applicationId "com.saralive.poply"
+        applicationId "com.poply.user"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         multiDexEnabled true
-        versionCode 6
-        versionName "6.0"
+        versionCode 1
+        versionName "1.0"
     }
     splits {
         abi {

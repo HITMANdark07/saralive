@@ -66,6 +66,35 @@
     },
     {
       "client_info": {
+        "mobilesdk_app_id": "1:291449817191:android:b74ccd67a20d7da9fb2cc2",
+        "android_client_info": {
+          "package_name": "com.poply.user"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "291449817191-4jsa2ktu32kf0josbovg37ct7tuenr5u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUhVE-e278l8vgSX5OU3XSKLqX6Jj1PQA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "291449817191-4jsa2ktu32kf0josbovg37ct7tuenr5u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:291449817191:android:7b6680e58422dd0dfb2cc2",
         "android_client_info": {
           "package_name": "com.saralive"
