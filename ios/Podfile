@@ -24,6 +24,9 @@ target 'saralive' do
 
   pod 'agora-react-native-rtm', :path => '../node_modules/agora-react-native-rtm'
 
+  pod 'RNPgReactNativeSdkBridge', :path => '../node_modules/react-native-pg-react-native-sdk'
+
+
   target 'saraliveTests' do
     inherit! :complete
     # Pods for testing

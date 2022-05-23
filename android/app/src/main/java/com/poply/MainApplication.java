@@ -1,5 +1,6 @@
 package com.poply.user;
 
+import com.reactlibrary.RNPgReactNativeSdkPackage;
 import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;

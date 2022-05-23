@@ -87,7 +87,14 @@ const Main = ({navigation,setUser}) => {
     return (
         <View style={{flex:1}}>
             <ImageBackground source={require("../../assets/images/back.jpg")} resizeMode="cover" style={{flex:1, justifyContent:'flex-end'}}>
-                <TouchableOpacity onPress={() => {
+                <Text style={{
+                    textAlign:'center',
+                    color: 'white',
+                    fontSize:50,
+                    fontWeight:'500',
+                    marginBottom:270
+                }}>POPLY</Text>
+                {/* <TouchableOpacity onPress={() => {
                     navigation.navigate('SignUp')
                 }}>
                     <LinearGradient  colors={['#FEDB37', '#FDB931', '#9f7928', '#8A6E2F']} style={styles.button} >
@@ -106,12 +113,12 @@ const Main = ({navigation,setUser}) => {
                                 <Text style={{fontSize:22, fontWeight:'800', color:'#fff'}}>LOGIN</Text>
                         </>
                     </LinearGradient>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
 
-                <TouchableOpacity style={styles.social} activeOpacity={0.4} onPress={login}>
+                {/* <TouchableOpacity style={styles.social} activeOpacity={0.4} onPress={login}>
                     <Image source={require("../../assets/images/fb.png")} style={{width:50, height:50}} />
                     <Text style={{fontSize:16, fontWeight:'600', color:'#000'}}>Signin with Facebook</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <TouchableOpacity style={styles.social} activeOpacity={0.4} onPress={signIn}>
                     <Image source={require("../../assets/images/google.png")} style={{width:40, height:40, padding:5}} />
                     <Text style={{fontSize:16, fontWeight:'600', color:'#000'}}>Signin with Google</Text>
@@ -156,7 +163,7 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         justifyContent:'center',
         marginTop:20,
-        marginBottom:20,
+        marginBottom:50,
         width:'60%',
         alignSelf:'center',
         borderRadius:50,

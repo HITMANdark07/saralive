@@ -11,10 +11,12 @@ import {
 } from 'react-native';
 import {connect} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
-import {API} from '../../api.config';
+import {API, cashfreeAppId} from '../../api.config';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Ico from 'react-native-vector-icons/AntDesign';
+import uuid from 'react-native-uuid';
 import Ic from 'react-native-vector-icons/FontAwesome5';
+import { generateTokenAndPay } from '../utils';
 import RazorpayCheckout from 'react-native-razorpay';
 import logo from '../../assets/logo.png';
 import axios from 'axios';
@@ -29,6 +31,16 @@ const BuyCoins = ({navigation, currentUser, route}) => {
   const coinsData = [
       100,300,500,1000,2000
   ]
+
+  const buy = async(amount) => {
+    try{
+      const orderId = uuid.v4();
+      generateTokenAndPay(amount,orderId,currentUser)
+    }catch(err){
+      console.log(err);
+      ToastAndroid.showWithGravity("Something Went Wrong", ToastAndroid.CENTER, ToastAndroid.LONG);
+    }
+  }
 
   const ShowCoinBuy = ({coin}) => {
       return (
@@ -97,46 +109,51 @@ const BuyCoins = ({navigation, currentUser, route}) => {
             
         {
             coinsData.map((c,i)=>(
-                <TouchableOpacity key={i} onPress={() => {
-                    var options = {
-                        description: 'Poply Payments',
-                        image: 'https://cdn3.iconfinder.com/data/icons/basic-user-interface-application/32/INSTAGRAM_ICON_SETS-35-512.png',
-                        currency: 'INR',
-                        key: 'rzp_test_wZWQUchj1aBsfY',
-                        amount: parseInt((c*100*100)/70),
-                        name: 'Poply',
-                        //order_id: 'order_DslnoIgkIDL8Zt',//Replace this with an order_id created using Orders API.
-                        prefill: {
-                          email: currentUser.email,
-                          contact: currentUser.telephone,
-                          name: currentUser.name
-                        },
-                        theme: {color: '#10152F'}
-                      }
+                <TouchableOpacity key={i} onPress={() => 
+                {
+                  buy(c);
+                }
+                // {
+                //     var options = {
+                //         description: 'Poply Payments',
+                //         image: 'https://cdn3.iconfinder.com/data/icons/basic-user-interface-application/32/INSTAGRAM_ICON_SETS-35-512.png',
+                //         currency: 'INR',
+                //         key: 'rzp_test_wZWQUchj1aBsfY',
+                //         amount: parseInt((c*100*100)/70),
+                //         name: 'Poply',
+                //         //order_id: 'order_DslnoIgkIDL8Zt',//Replace this with an order_id created using Orders API.
+                //         prefill: {
+                //           email: currentUser.email,
+                //           contact: currentUser.telephone,
+                //           name: currentUser.name
+                //         },
+                //         theme: {color: '#10152F'}
+                //       }
 
-                      RazorpayCheckout.open(options).then((data) => {
-                        // handle success
+                //       RazorpayCheckout.open(options).then((data) => {
+                //         // handle success
 
-                        axios({
-                            method:'POST',
-                            url:`${API}/customer_wallet_recharge`,
-                            data:{
-                                customer_id:currentUser.user_id,
-                                paymode:1,
-                                transaction_details:data.razorpay_payment_id,
-                                amount:c
-                            }
-                        }).then((res) => {
-                            ToastAndroid.showWithGravity(res.data.responseText,ToastAndroid.CENTER,ToastAndroid.LONG);
-                        }).catch((err) => {
-                            console.log(err);
-                        })
-                        console.log(`Success: ${data.razorpay_payment_id}`);
-                      }).catch((error) => {
-                        // handle failure
-                        console.warn(`Error: ${error.code} | ${error.description}`);
-                      });
-                }}>
+                //         axios({
+                //             method:'POST',
+                //             url:`${API}/customer_wallet_recharge`,
+                //             data:{
+                //                 customer_id:currentUser.user_id,
+                //                 paymode:1,
+                //                 transaction_details:data.razorpay_payment_id,
+                //                 amount:c
+                //             }
+                //         }).then((res) => {
+                //             ToastAndroid.showWithGravity(res.data.responseText,ToastAndroid.CENTER,ToastAndroid.LONG);
+                //         }).catch((err) => {
+                //             console.log(err);
+                //         })
+                //         console.log(`Success: ${data.razorpay_payment_id}`);
+                //       }).catch((error) => {
+                //         // handle failure
+                //         console.warn(`Error: ${error.code} | ${error.description}`);
+                //       });
+                // }
+                }>
                 <ShowCoinBuy coin={c} />
                 </TouchableOpacity>
             ))

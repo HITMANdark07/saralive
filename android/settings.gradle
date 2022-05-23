@@ -1,4 +1,8 @@
-rootProject.name = 'saralive'
+rootProject.name = 'poply'
+include ':react-native-uuid-generator'
+project(':react-native-uuid-generator').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-uuid-generator/android')
+include ':react-native-pg-react-native-sdk'
+project(':react-native-pg-react-native-sdk').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-pg-react-native-sdk/android')
 include ':react-native-razorpay'
 project(':react-native-razorpay').projectDir = new File(rootProject.projectDir,   '../node_modules/react-native-razorpay/android')
 include ':agora-react-native-rtm'

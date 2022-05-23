@@ -3,7 +3,7 @@ import { WebView } from 'react-native-webview';
 
 const RefundPolicy = () => {
     return(
-        <WebView style={{flex:1}} source={{ uri: 'http://poply.live/refund.html' }} />
+        <WebView style={{flex:1}} source={{ uri: 'https://poply.live/refund.html' }} />
     )
 }
 
