@@ -35,7 +35,7 @@ export const generateTokenAndPay = (amount, orderId, currentUser) => {
             checkout.set("color1", "#6002EE");
             checkout.set("color2", "#ffff1f");
             checkout.set("appName",null);
-            RNPgReactNativeSdk.startPaymentUPI(checkout,'PROD',(response) => {
+            RNPgReactNativeSdk.startPaymentWEB(checkout,'PROD',(response) => {
               const resp = JSON.parse(response);
               if(resp.txStatus=="SUCCESS"){
                 axios({
